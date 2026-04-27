@@ -1,0 +1,10 @@
+node_modules
+.next
+.next/dev
+.vercel
+dist
+build
+coverage
+public
+pnpm-lock.yaml
+package-lock.json
