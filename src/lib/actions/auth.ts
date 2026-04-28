@@ -72,7 +72,7 @@ export async function registerAction(_: ActionState, formData: FormData): Promis
     return { status: 'error', message: error.message }
   }
   revalidatePath('/', 'layout')
-  redirect('/')
+  redirect(`/registro/exito?email=${encodeURIComponent(parsed.data.email)}`)
 }
 
 export async function logoutAction() {

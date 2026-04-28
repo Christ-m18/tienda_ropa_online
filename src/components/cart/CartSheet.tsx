@@ -1,6 +1,6 @@
 'use client'
 
-import { ShoppingCart, Trash2, Plus, Minus, X } from 'lucide-react'
+import { ShoppingCart, Trash2, Plus, Minus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useCartStore } from '@/store/useCartStore'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -57,7 +57,7 @@ export default function CartSheet({ children }: { children: React.ReactNode }) {
               <div className="space-y-6">
                 {items.map((item) => (
                   <div key={item.id} className="flex gap-4">
-                    <div className="relative h-24 w-20 flex-shrink-0 overflow-hidden rounded-md border">
+                    <div className="relative h-24 w-20 shrink-0 overflow-hidden rounded-md border">
                       <Image
                         src={item.image}
                         alt={item.name}

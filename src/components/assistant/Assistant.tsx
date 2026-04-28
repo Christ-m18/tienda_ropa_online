@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect, useTransition } from 'react'
+import { useState, useRef, useEffect, useTransition, type SyntheticEvent } from 'react'
 import { MessageCircle, X, Send, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -26,7 +26,7 @@ export default function Assistant() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' })
   }, [messages, open])
 
-  function send(e: React.FormEvent) {
+  function send(e: SyntheticEvent<HTMLFormElement>) {
     e.preventDefault()
     const text = input.trim()
     if (!text) return
@@ -60,7 +60,7 @@ export default function Assistant() {
         <div
           role="dialog"
           aria-label="Chat con El Cuero"
-          className="fixed bottom-[8.5rem] md:bottom-24 right-4 md:right-6 w-[min(380px,calc(100vw-2rem))] h-[520px] max-h-[calc(100vh-10rem)] bg-white rounded-3xl shadow-2xl border border-zinc-200 flex flex-col z-50 overflow-hidden"
+          className="fixed bottom-34 md:bottom-24 right-4 md:right-6 w-[min(380px,calc(100vw-2rem))] h-[520px] max-h-[calc(100vh-10rem)] bg-white rounded-3xl shadow-2xl border border-zinc-200 flex flex-col z-50 overflow-hidden"
         >
           <div className="bg-rd-charcoal text-white p-4 flex items-center gap-3">
             <div className="h-10 w-10 rounded-full bg-rd-red flex items-center justify-center">

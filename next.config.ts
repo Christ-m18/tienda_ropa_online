@@ -4,7 +4,21 @@ const supabaseHost = process.env.NEXT_PUBLIC_SUPABASE_URL
   ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname
   : undefined;
 
+const tunnelHosts = [
+  "*.tunnelmole.net",
+  "*.ngrok-free.app",
+  "*.ngrok.io",
+  "*.ngrok.app",
+  "*.trycloudflare.com",
+  "*.loca.lt",
+];
+
+const extraOrigin = process.env.NEXT_PUBLIC_SITE_URL
+  ? [new URL(process.env.NEXT_PUBLIC_SITE_URL).host]
+  : [];
+
 const nextConfig: NextConfig = {
+  allowedDevOrigins: [...tunnelHosts, ...extraOrigin],
   output: 'standalone',
   turbopack: {
     root: __dirname,
@@ -23,6 +37,7 @@ const nextConfig: NextConfig = {
   experimental: {
     serverActions: {
       bodySizeLimit: "5mb",
+      allowedOrigins: [...tunnelHosts, ...extraOrigin],
     },
   },
 };

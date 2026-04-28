@@ -11,6 +11,7 @@ import { useCartStore } from '@/store/useCartStore'
 import { placeOrder } from '@/lib/actions/checkout'
 import { validateCoupon } from '@/lib/actions/coupons'
 import { formatRD } from '@/lib/format'
+import { isPaymentEnabled, DISABLED_REASON } from '@/lib/payments'
 import { toast } from 'sonner'
 import type { Address, PaymentMethod } from '@/types'
 
@@ -252,31 +253,47 @@ export default function CheckoutFlow({
             <div className="grid gap-3">
               {PAYMENT_METHODS.map((m) => {
                 const Icon = m.icon
+                const enabled = isPaymentEnabled(m.id)
                 const selected = paymentMethod === m.id
                 return (
                   <button
                     key={m.id}
                     type="button"
-                    onClick={() => setPaymentMethod(m.id)}
+                    onClick={() => enabled && setPaymentMethod(m.id)}
+                    disabled={!enabled}
+                    aria-disabled={!enabled}
                     className={`text-left rounded-2xl border-2 p-4 flex items-center gap-4 transition ${
-                      selected ? 'border-rd-red bg-rd-red/5' : 'border-zinc-200 hover:border-zinc-300'
+                      !enabled
+                        ? 'border-zinc-200 bg-zinc-50 opacity-60 cursor-not-allowed'
+                        : selected
+                          ? 'border-rd-red bg-rd-red/5'
+                          : 'border-zinc-200 hover:border-zinc-300'
                     }`}
                   >
                     <div
-                      className={`h-11 w-11 rounded-xl flex items-center justify-center ${selected ? 'bg-rd-red text-white' : 'bg-zinc-100 text-zinc-700'}`}
+                      className={`h-11 w-11 rounded-xl flex items-center justify-center ${
+                        !enabled
+                          ? 'bg-zinc-200 text-zinc-400'
+                          : selected
+                            ? 'bg-rd-red text-white'
+                            : 'bg-zinc-100 text-zinc-700'
+                      }`}
                     >
                       <Icon className="h-5 w-5" />
                     </div>
                     <div className="flex-1">
-                      <p className="font-bold flex items-center gap-2">
+                      <p className="font-bold flex items-center gap-2 flex-wrap">
                         {m.title}
-                        {m.recommended && (
+                        {!enabled && DISABLED_REASON[m.id] && (
+                          <Badge className="bg-zinc-300 text-zinc-700">{DISABLED_REASON[m.id]}</Badge>
+                        )}
+                        {enabled && m.recommended && (
                           <Badge className="bg-rd-yellow text-rd-charcoal">Recomendado en RD</Badge>
                         )}
                       </p>
                       <p className="text-sm text-zinc-500">{m.desc}</p>
                     </div>
-                    {selected && <CheckCircle2 className="h-5 w-5 text-rd-red" />}
+                    {enabled && selected && <CheckCircle2 className="h-5 w-5 text-rd-red" />}
                   </button>
                 )
               })}
@@ -330,7 +347,7 @@ export default function CheckoutFlow({
         <div className="space-y-3 max-h-72 overflow-y-auto pr-1">
           {items.map((it) => (
             <div key={it.id} className="flex gap-3 items-center">
-              <div className="relative h-14 w-14 rounded-lg overflow-hidden bg-zinc-100 flex-shrink-0">
+              <div className="relative h-14 w-14 rounded-lg overflow-hidden bg-zinc-100 shrink-0">
                 <Image src={it.image} alt={it.name} fill sizes="56px" className="object-cover" />
               </div>
               <div className="flex-1 min-w-0">

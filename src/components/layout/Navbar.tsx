@@ -53,7 +53,7 @@ export default function Navbar({ profile }: { profile: Profile | null }) {
   }, [])
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-zinc-200/70 bg-white/85 backdrop-blur-xl supports-[backdrop-filter]:bg-white/70">
+    <header className="sticky top-0 z-50 w-full border-b border-zinc-200/70 bg-white/85 backdrop-blur-xl supports-backdrop-filter:bg-white/70">
       <div className="container mx-auto px-4">
         <div className="flex h-16 md:h-20 items-center justify-between gap-4">
           {/* Logo */}

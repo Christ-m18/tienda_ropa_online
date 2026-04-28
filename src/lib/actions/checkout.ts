@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/utils/supabase/server'
 import { validateCoupon } from './coupons'
+import { isPaymentEnabled } from '@/lib/payments'
 
 const itemSchema = z.object({
   id: z.uuid(),
@@ -37,6 +38,10 @@ const FLAT_SHIPPING = 250
 export async function placeOrder(input: CheckoutInput) {
   const parsed = checkoutSchema.safeParse(input)
   if (!parsed.success) return { ok: false as const, message: 'Datos del pedido inválidos' }
+
+  if (!isPaymentEnabled(parsed.data.payment_method)) {
+    return { ok: false as const, message: 'Método de pago no disponible por ahora.' }
+  }
 
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()

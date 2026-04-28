@@ -23,7 +23,14 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: { user: rawUser } } = await supabase.auth.getUser()
+
+  // Sin correo confirmado, lo tratamos como anónimo y cerramos cualquier sesión.
+  let user = rawUser
+  if (rawUser && !rawUser.email_confirmed_at) {
+    await supabase.auth.signOut()
+    user = null
+  }
 
   const url = request.nextUrl
   const path = url.pathname
@@ -35,6 +42,9 @@ export async function updateSession(request: NextRequest) {
     const redirect = url.clone()
     redirect.pathname = '/login'
     redirect.searchParams.set('redirect', path)
+    if (rawUser && !rawUser.email_confirmed_at) {
+      redirect.searchParams.set('reason', 'unconfirmed')
+    }
     return NextResponse.redirect(redirect)
   }
 
