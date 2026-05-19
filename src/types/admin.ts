@@ -13,6 +13,7 @@ export interface AdminMetrics {
   totalUsers: number
   newUsersLast7Days: number
   topProducts: Array<{ name: string; sales: number; revenue: number }>
+  topProductsFromOrders: Array<{ name: string; sales: number; revenue: number }>
   recentOrders: Array<{
     id: string
     total: number
@@ -25,6 +26,8 @@ export interface AdminMetrics {
   ordersByStatus: Record<string, number>
   ordersByPaymentMethod: Record<string, number>
   revenueByDay: Array<{ date: string; revenue: number }>
+  revenueByDay30: Array<{ date: string; revenue: number; orders: number }>
+  revenueByCategory: Array<{ category: string; revenue: number }>
 }
 
 export interface ActivityEvent {

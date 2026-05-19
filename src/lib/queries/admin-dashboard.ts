@@ -2,6 +2,14 @@ import 'server-only'
 import { createClient } from '@/utils/supabase/server'
 import type { AdminMetrics, ActivityEvent } from '@/types/admin'
 
+type OrderItemJoin = {
+  order_id: string
+  product_id: string
+  quantity: number
+  unit_price: number
+  product: { name: string; category: { name: string } | null } | null
+}
+
 export async function getAdminDashboardMetrics(): Promise<AdminMetrics> {
   const supabase = await createClient()
 
@@ -19,6 +27,7 @@ export async function getAdminDashboardMetrics(): Promise<AdminMetrics> {
     newProfiles,
     topProductsData,
     pendingProofs,
+    orderItemsRaw,
   ] = await Promise.all([
     supabase.from('orders').select('id, total, status, payment_status, payment_method, created_at'),
     supabase
@@ -31,6 +40,10 @@ export async function getAdminDashboardMetrics(): Promise<AdminMetrics> {
     supabase.from('profiles').select('id').gte('created_at', last7Days),
     supabase.from('products').select('name, sales_count, price').order('sales_count', { ascending: false }).limit(5),
     supabase.from('payment_proofs').select('id').eq('status', 'pending'),
+    supabase
+      .from('order_items')
+      .select('order_id, product_id, quantity, unit_price, product:products(name, category:categories(name))')
+      .limit(5000),
   ])
 
   // Build profile name lookup from allProfiles (already fetched)
@@ -79,7 +92,7 @@ export async function getAdminDashboardMetrics(): Promise<AdminMetrics> {
     ordersByPaymentMethod[o.payment_method] = (ordersByPaymentMethod[o.payment_method] ?? 0) + 1
   }
 
-  // Revenue by day (last 14 days)
+  // Revenue by day (last 14 days — kept for backwards compat)
   const revenueByDay: Array<{ date: string; revenue: number }> = []
   const dayOrders = nonCancelled.filter((o) => o.created_at >= last14Days)
   const dayMap = new Map<string, number>()
@@ -93,12 +106,57 @@ export async function getAdminDashboardMetrics(): Promise<AdminMetrics> {
     revenueByDay.push({ date: key, revenue: dayMap.get(key) ?? 0 })
   }
 
-  // Top products
+  // Revenue by day (last 30 days with order count)
+  const revenueByDay30: Array<{ date: string; revenue: number; orders: number }> = []
+  const dayOrders30 = nonCancelled.filter((o) => o.created_at >= last30Days)
+  const dayRevMap30 = new Map<string, number>()
+  const dayOrdMap30 = new Map<string, number>()
+  for (const o of dayOrders30) {
+    const day = o.created_at.slice(0, 10)
+    dayRevMap30.set(day, (dayRevMap30.get(day) ?? 0) + Number(o.total))
+    dayOrdMap30.set(day, (dayOrdMap30.get(day) ?? 0) + 1)
+  }
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000)
+    const key = d.toISOString().slice(0, 10)
+    revenueByDay30.push({ date: key, revenue: dayRevMap30.get(key) ?? 0, orders: dayOrdMap30.get(key) ?? 0 })
+  }
+
+  // Top products from products table (fallback / seed data)
   const topProducts = (topProductsData.data ?? []).map((p) => ({
     name: p.name,
     sales: p.sales_count,
     revenue: p.sales_count * Number(p.price),
   }))
+
+  // Top products from real order_items (accurate data)
+  const nonCancelledIds = new Set(nonCancelled.map((o) => o.id))
+  const orderItems = (orderItemsRaw.data ?? []) as unknown as OrderItemJoin[]
+  const relevantItems = orderItems.filter((item) => nonCancelledIds.has(item.order_id))
+
+  const productSalesMap = new Map<string, { name: string; sales: number; revenue: number }>()
+  for (const item of relevantItems) {
+    const name = item.product?.name ?? 'Desconocido'
+    const existing = productSalesMap.get(item.product_id) ?? { name, sales: 0, revenue: 0 }
+    productSalesMap.set(item.product_id, {
+      name,
+      sales: existing.sales + item.quantity,
+      revenue: existing.revenue + item.quantity * Number(item.unit_price),
+    })
+  }
+  const topProductsFromOrders = Array.from(productSalesMap.values())
+    .sort((a, b) => b.sales - a.sales)
+    .slice(0, 5)
+
+  // Revenue by category from real order_items
+  const categoryRevenueMap = new Map<string, number>()
+  for (const item of relevantItems) {
+    const cat = item.product?.category?.name ?? 'Sin categoría'
+    categoryRevenueMap.set(cat, (categoryRevenueMap.get(cat) ?? 0) + item.quantity * Number(item.unit_price))
+  }
+  const revenueByCategory = Array.from(categoryRevenueMap.entries())
+    .map(([category, revenue]) => ({ category, revenue }))
+    .sort((a, b) => b.revenue - a.revenue)
 
   return {
     totalRevenue,
@@ -115,6 +173,9 @@ export async function getAdminDashboardMetrics(): Promise<AdminMetrics> {
     totalUsers: allProfiles.data?.length ?? 0,
     newUsersLast7Days: newProfiles.data?.length ?? 0,
     topProducts,
+    topProductsFromOrders,
+    revenueByDay30,
+    revenueByCategory,
     recentOrders: (recentOrdersList.data ?? []).map((o) => ({
       ...o,
       profiles: { full_name: profileMap.get(o.user_id) ?? null },
