@@ -1,36 +1,40 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { Building2, Copy, CheckCircle2, Upload, FileText } from 'lucide-react'
+import { Building2, Copy, Check, CheckCircle2, Upload, FileText, Truck, Zap } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { uploadVoucher } from '@/lib/actions/voucher'
 import { toast } from 'sonner'
 
-const BANK_ACCOUNTS = [
-  { bank: 'Banco Popular Dominicano', account: '123-4567890-1', type: 'Ahorro', holder: 'Tienda RD SRL', rnc: '1-23-45678-9' },
-  { bank: 'BHD Leon', account: '987-6543210-1', type: 'Corriente', holder: 'Tienda RD SRL', rnc: '1-23-45678-9' },
-  { bank: 'Banreservas', account: '456-7891234-1', type: 'Ahorro', holder: 'Tienda RD SRL', rnc: '1-23-45678-9' },
+const BANKS = [
+  { id: 'reservas', name: 'Banco de Reservas', account: '9601750827', color: 'bg-green-600' },
+  { id: 'bhd', name: 'Banco BHD', account: '38675820016', color: 'bg-blue-700' },
+  { id: 'santa_cruz', name: 'Banco Santa Cruz', account: '11145000018017', color: 'bg-red-700' },
 ]
-
-const BANK_NAMES = BANK_ACCOUNTS.map((b) => b.bank)
 
 export default function BankTransferInstructions({ orderId }: { orderId: string }) {
   const [pending, startTransition] = useTransition()
   const [submitted, setSubmitted] = useState(false)
+  const [selectedBank, setSelectedBank] = useState<string | null>(null)
+  const [copiedId, setCopiedId] = useState<string | null>(null)
   const [file, setFile] = useState<File | null>(null)
-  const [bankName, setBankName] = useState(BANK_NAMES[0])
   const [reference, setReference] = useState('')
   const [amount, setAmount] = useState('')
   const [notes, setNotes] = useState('')
 
-  function copyToClipboard(text: string) {
-    navigator.clipboard.writeText(text)
-    toast.success('Copiado')
+  const selected = BANKS.find((b) => b.id === selectedBank)
+
+  function copyAccount(bankId: string, account: string) {
+    navigator.clipboard.writeText(account)
+    setCopiedId(bankId)
+    toast.success('Numero de cuenta copiado')
+    setTimeout(() => setCopiedId(null), 2000)
   }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    if (!selected) return toast.error('Selecciona un banco')
     if (!file) return toast.error('Sube el comprobante')
     if (!reference.trim()) return toast.error('Ingresa el numero de referencia')
     if (!amount.trim()) return toast.error('Ingresa el monto')
@@ -39,7 +43,7 @@ export default function BankTransferInstructions({ orderId }: { orderId: string 
       const fd = new FormData()
       fd.set('order_id', orderId)
       fd.set('file', file)
-      fd.set('bank_name', bankName)
+      fd.set('bank_name', selected.name)
       fd.set('reference_number', reference)
       fd.set('amount', amount)
       fd.set('notes', notes)
@@ -60,59 +64,104 @@ export default function BankTransferInstructions({ orderId }: { orderId: string 
         <p className="text-sm text-emerald-700 mt-1">
           Estamos revisando tu comprobante. Te notificaremos cuando tu pago sea aprobado.
         </p>
+        <div className="mt-3 flex items-center justify-center gap-2 text-xs text-emerald-600 font-bold">
+          <Truck className="h-4 w-4" />
+          Tu pedido tiene entrega preferencial
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="space-y-6">
-      {/* Bank accounts */}
-      <div className="bg-rd-blue/5 border border-rd-blue/20 rounded-2xl p-5">
-        <div className="flex items-center gap-2 mb-4">
-          <Building2 className="h-5 w-5 text-rd-blue" />
-          <p className="font-display text-lg tracking-wider">Datos bancarios</p>
+    <div className="space-y-5">
+      {/* Preferential delivery badge */}
+      <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 flex items-center gap-3">
+        <div className="h-9 w-9 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0">
+          <Zap className="h-5 w-5" />
         </div>
-        <p className="text-sm text-zinc-600 mb-4">
-          Transfiere el monto total a cualquiera de estas cuentas y luego sube el comprobante:
-        </p>
-        <div className="space-y-3">
-          {BANK_ACCOUNTS.map((acc) => (
-            <div key={acc.bank} className="bg-white rounded-xl p-3 border border-zinc-200">
-              <div className="flex items-center justify-between mb-1">
-                <p className="font-bold text-sm">{acc.bank}</p>
-                <button
-                  type="button"
-                  onClick={() => copyToClipboard(acc.account)}
-                  className="text-zinc-400 hover:text-rd-red p-1"
-                  title="Copiar cuenta"
-                >
-                  <Copy className="h-3.5 w-3.5" />
-                </button>
-              </div>
-              <p className="text-sm font-mono text-zinc-700">{acc.account} ({acc.type})</p>
-              <p className="text-xs text-zinc-500">{acc.holder} &middot; RNC: {acc.rnc}</p>
-            </div>
-          ))}
+        <div>
+          <p className="font-bold text-sm text-emerald-800">Entrega preferencial</p>
+          <p className="text-xs text-emerald-700">Los pedidos por transferencia tienen prioridad de envio.</p>
         </div>
       </div>
 
-      {/* Upload form */}
-      <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-zinc-200 p-5 space-y-4">
-        <div className="flex items-center gap-2 mb-2">
-          <Upload className="h-5 w-5 text-rd-red" />
-          <p className="font-display text-lg tracking-wider">Subir comprobante</p>
+      {/* Step 1: Select bank */}
+      <div className="bg-rd-blue/5 border border-rd-blue/20 rounded-2xl p-5">
+        <div className="flex items-center gap-2 mb-1">
+          <Building2 className="h-5 w-5 text-rd-blue" />
+          <p className="font-display text-lg tracking-wider">1. Elige tu banco</p>
         </div>
+        <p className="text-xs text-zinc-500 mb-4">
+          Selecciona el banco al que haras la transferencia para ver el numero de cuenta.
+        </p>
 
-        <div>
-          <label className="text-sm text-zinc-600 mb-1 block">Banco utilizado</label>
-          <select
-            value={bankName}
-            onChange={(e) => setBankName(e.target.value)}
-            className="h-10 w-full rounded-md border border-zinc-200 bg-white px-3 text-sm focus:outline-none focus:ring-2 focus:ring-rd-red"
-          >
-            {BANK_NAMES.map((b) => <option key={b} value={b}>{b}</option>)}
-          </select>
+        <div className="grid gap-2">
+          {BANKS.map((bank) => {
+            const isSelected = selectedBank === bank.id
+            const isCopied = copiedId === bank.id
+            return (
+              <button
+                key={bank.id}
+                type="button"
+                onClick={() => setSelectedBank(bank.id)}
+                className={`w-full text-left rounded-xl p-4 border-2 transition-all ${
+                  isSelected
+                    ? 'border-rd-blue bg-white shadow-sm'
+                    : 'border-zinc-200 bg-white hover:border-zinc-300'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className={`h-10 w-10 rounded-lg ${bank.color} text-white flex items-center justify-center font-display text-sm shrink-0`}>
+                    {bank.name.split(' ').pop()?.charAt(0)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-bold text-sm">{bank.name}</p>
+                    {isSelected && (
+                      <p className="font-mono text-base text-zinc-800 mt-0.5">{bank.account}</p>
+                    )}
+                  </div>
+                  {isSelected && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        copyAccount(bank.id, bank.account)
+                      }}
+                      className={`shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold transition-colors ${
+                        isCopied
+                          ? 'bg-emerald-100 text-emerald-700'
+                          : 'bg-rd-blue/10 text-rd-blue hover:bg-rd-blue/20'
+                      }`}
+                    >
+                      {isCopied ? (
+                        <>
+                          <Check className="h-3.5 w-3.5" />
+                          Copiado
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="h-3.5 w-3.5" />
+                          Copiar
+                        </>
+                      )}
+                    </button>
+                  )}
+                </div>
+              </button>
+            )
+          })}
         </div>
+      </div>
+
+      {/* Step 2: Upload voucher */}
+      <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-zinc-200 p-5 space-y-4">
+        <div className="flex items-center gap-2 mb-1">
+          <Upload className="h-5 w-5 text-rd-red" />
+          <p className="font-display text-lg tracking-wider">2. Sube tu comprobante</p>
+        </div>
+        <p className="text-xs text-zinc-500">
+          Realiza la transferencia y luego sube el voucher. Un administrador lo revisara y confirmara tu pedido.
+        </p>
 
         <div className="grid sm:grid-cols-2 gap-3">
           <div>
@@ -167,7 +216,7 @@ export default function BankTransferInstructions({ orderId }: { orderId: string 
 
         <Button
           type="submit"
-          disabled={pending}
+          disabled={pending || !selectedBank}
           className="w-full bg-rd-red hover:bg-rd-red-dark text-white h-11 font-display tracking-wider"
         >
           {pending ? 'Enviando...' : 'Enviar comprobante'}

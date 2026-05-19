@@ -31,7 +31,7 @@ const PAYMENT_METHODS: Array<{
   },
   { id: 'stripe', title: 'Tarjeta (Stripe)', desc: 'Visa, Mastercard, Amex', icon: CreditCard },
   { id: 'paypal', title: 'PayPal', desc: 'Cuenta PayPal o tarjeta', icon: Wallet },
-  { id: 'bank_transfer', title: 'Transferencia', desc: 'Banco BHD, Popular, Reservas', icon: Building2 },
+  { id: 'bank_transfer', title: 'Transferencia bancaria', desc: 'BHD, Reservas, Santa Cruz — Entrega preferencial', icon: Building2 },
 ]
 
 const PROVINCES = [
@@ -299,10 +299,14 @@ export default function CheckoutFlow({
               })}
             </div>
             {paymentMethod === 'bank_transfer' && (
-              <div className="mt-4 bg-rd-blue/5 border border-rd-blue/20 rounded-xl p-4">
+              <div className="mt-4 bg-rd-blue/5 border border-rd-blue/20 rounded-xl p-4 space-y-2">
                 <p className="text-sm text-rd-blue font-medium">
                   <Building2 className="h-4 w-4 inline mr-1.5" />
-                  Despues de confirmar tu pedido, podras ver los datos bancarios y subir el comprobante de transferencia.
+                  Despues de confirmar tu pedido, podras elegir el banco, ver el numero de cuenta y subir el comprobante.
+                </p>
+                <p className="text-xs text-emerald-700 font-bold">
+                  <Truck className="h-3.5 w-3.5 inline mr-1" />
+                  Entrega preferencial — los pedidos por transferencia tienen prioridad de envio.
                 </p>
               </div>
             )}
