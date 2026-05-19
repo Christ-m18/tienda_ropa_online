@@ -298,6 +298,14 @@ export default function CheckoutFlow({
                 )
               })}
             </div>
+            {paymentMethod === 'bank_transfer' && (
+              <div className="mt-4 bg-rd-blue/5 border border-rd-blue/20 rounded-xl p-4">
+                <p className="text-sm text-rd-blue font-medium">
+                  <Building2 className="h-4 w-4 inline mr-1.5" />
+                  Despues de confirmar tu pedido, podras ver los datos bancarios y subir el comprobante de transferencia.
+                </p>
+              </div>
+            )}
           </Card>
         )}
 

@@ -5,6 +5,10 @@ export interface Profile {
   phone?: string | null
   email?: string | null
   is_admin: boolean
+  is_blocked: boolean
+  blocked_reason?: string | null
+  blocked_at?: string | null
+  blocked_by?: string | null
   created_at: string
 }
 
@@ -112,6 +116,24 @@ export interface Coupon {
   valid_from: string
   valid_until?: string | null
   is_active: boolean
+}
+
+export type PaymentProofStatus = 'pending' | 'approved' | 'rejected'
+
+export interface PaymentProof {
+  id: string
+  order_id: string
+  user_id: string
+  file_path: string
+  bank_name?: string | null
+  reference_number?: string | null
+  amount?: number | null
+  notes?: string | null
+  status: PaymentProofStatus
+  reviewed_by?: string | null
+  reviewed_at?: string | null
+  rejection_reason?: string | null
+  created_at: string
 }
 
 export type NotificationType = 'order' | 'promo' | 'system' | 'review'

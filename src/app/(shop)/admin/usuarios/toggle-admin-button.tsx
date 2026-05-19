@@ -20,7 +20,7 @@ export default function ToggleAdminButton({ userId, isAdmin }: { userId: string;
   }
 
   return (
-    <Button variant="outline" size="sm" onClick={handleClick} disabled={pending}>
+    <Button variant="outline" size="sm" onClick={handleClick} disabled={pending} className="h-8 text-xs">
       {pending ? 'Guardando...' : isAdmin ? 'Quitar admin' : 'Hacer admin'}
     </Button>
   )

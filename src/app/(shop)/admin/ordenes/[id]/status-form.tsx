@@ -6,7 +6,13 @@ import { Input } from '@/components/ui/input'
 import { updateOrderStatus } from '@/lib/actions/admin'
 import { toast } from 'sonner'
 
-const STATUSES = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'] as const
+const STATUSES = [
+  { value: 'pending', label: 'Pendiente' },
+  { value: 'processing', label: 'En proceso' },
+  { value: 'shipped', label: 'Enviado' },
+  { value: 'delivered', label: 'Entregado' },
+  { value: 'cancelled', label: 'Cancelado' },
+] as const
 
 export default function OrderStatusForm({ id, status, tracking }: { id: string; status: string; tracking: string }) {
   const [pending, startTransition] = useTransition()
@@ -22,20 +28,20 @@ export default function OrderStatusForm({ id, status, tracking }: { id: string; 
   }
 
   return (
-    <form onSubmit={onSubmit} className="bg-zinc-50 rounded-2xl p-4 grid sm:grid-cols-[1fr_1fr_auto] gap-3 items-end">
+    <form onSubmit={onSubmit} className="bg-zinc-50 rounded-xl p-4 grid sm:grid-cols-[1fr_1fr_auto] gap-3 items-end">
       <input type="hidden" name="id" value={id} />
       <label className="block">
         <span className="text-xs text-zinc-500 mb-1 block uppercase tracking-wider">Estado</span>
-        <select name="status" defaultValue={status} className="h-10 w-full rounded-md border border-zinc-200 bg-white px-3 text-sm">
-          {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
+        <select name="status" defaultValue={status} className="h-9 w-full rounded-md border border-zinc-200 bg-white px-3 text-sm">
+          {STATUSES.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
         </select>
       </label>
       <label className="block">
-        <span className="text-xs text-zinc-500 mb-1 block uppercase tracking-wider">N° de seguimiento</span>
-        <Input name="tracking_number" defaultValue={tracking} placeholder="DOM-12345" />
+        <span className="text-xs text-zinc-500 mb-1 block uppercase tracking-wider">N de seguimiento</span>
+        <Input name="tracking_number" defaultValue={tracking} placeholder="DOM-12345" className="h-9" />
       </label>
-      <Button type="submit" disabled={pending} className="bg-rd-red hover:bg-rd-red-dark text-white">
-        {pending ? 'Guardando…' : 'Actualizar'}
+      <Button type="submit" disabled={pending} className="bg-rd-red hover:bg-rd-red-dark text-white h-9">
+        {pending ? 'Guardando...' : 'Actualizar'}
       </Button>
     </form>
   )

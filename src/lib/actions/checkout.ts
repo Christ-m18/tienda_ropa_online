@@ -109,12 +109,15 @@ export async function placeOrder(input: CheckoutInput) {
   }
 
   // Notificacion al usuario
+  const isBankTransfer = payment_method === 'bank_transfer'
   await supabase.from('notifications').insert({
     user_id: user.id,
-    title: 'Pedido confirmado',
-    message: `Tu pedido #${String(orderId).slice(0, 8)} esta siendo procesado.`,
+    title: isBankTransfer ? 'Pedido creado - sube tu comprobante' : 'Pedido confirmado',
+    message: isBankTransfer
+      ? `Tu pedido #${String(orderId).slice(0, 8)} fue creado. Sube tu comprobante de transferencia para procesarlo.`
+      : `Tu pedido #${String(orderId).slice(0, 8)} esta siendo procesado.`,
     type: 'order',
-    link: `/perfil/pedidos/${orderId}`,
+    link: isBankTransfer ? `/checkout/exito/${orderId}` : `/perfil/pedidos/${orderId}`,
   })
 
   revalidatePath('/perfil/pedidos')

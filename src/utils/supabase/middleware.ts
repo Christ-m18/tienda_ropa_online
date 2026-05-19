@@ -25,7 +25,7 @@ export async function updateSession(request: NextRequest) {
 
   const { data: { user: rawUser } } = await supabase.auth.getUser()
 
-  // Sin correo confirmado, lo tratamos como anónimo y cerramos cualquier sesión.
+  // Sin correo confirmado, lo tratamos como anonimo y cerramos cualquier sesion.
   let user = rawUser
   if (rawUser && !rawUser.email_confirmed_at) {
     await supabase.auth.signOut()
@@ -54,15 +54,42 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(redirect)
   }
 
-  if (user && adminPaths.some((p) => path.startsWith(p))) {
-    const { data: profile } = await supabase
+  if (user && protectedPaths.some((p) => path.startsWith(p))) {
+    // Try with is_blocked first; fall back to is_admin only if column doesn't exist yet
+    let profile: { is_admin?: boolean; is_blocked?: boolean } | null = null
+    const { data, error } = await supabase
       .from('profiles')
-      .select('is_admin')
+      .select('is_admin, is_blocked')
       .eq('id', user.id)
       .maybeSingle()
-    if (!profile?.is_admin) {
+
+    if (error) {
+      // is_blocked column may not exist yet — query with is_admin only
+      const { data: fallback } = await supabase
+        .from('profiles')
+        .select('is_admin')
+        .eq('id', user.id)
+        .maybeSingle()
+      profile = fallback
+    } else {
+      profile = data
+    }
+
+    // Admin path check
+    if (adminPaths.some((p) => path.startsWith(p))) {
+      if (!profile?.is_admin) {
+        const redirect = url.clone()
+        redirect.pathname = '/'
+        return NextResponse.redirect(redirect)
+      }
+    }
+
+    // Blocked user check (all protected paths including admin)
+    if (profile?.is_blocked) {
+      await supabase.auth.signOut()
       const redirect = url.clone()
-      redirect.pathname = '/'
+      redirect.pathname = '/login'
+      redirect.searchParams.set('reason', 'blocked')
       return NextResponse.redirect(redirect)
     }
   }

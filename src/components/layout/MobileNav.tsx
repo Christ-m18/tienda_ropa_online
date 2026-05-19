@@ -13,16 +13,26 @@ const ITEMS = [
   { href: '/perfil', label: 'Cuenta', icon: User, match: (p: string) => p.startsWith('/perfil') && !p.startsWith('/perfil/favoritos') },
 ]
 
+function CartBadge() {
+  const hasHydrated = useCartStore((s) => s.hasHydrated)
+  const totalItems = useCartStore((s) => s.totalItems())
+  if (!hasHydrated || totalItems === 0) return null
+  return (
+    <span className="absolute top-1.5 right-[28%] h-4 min-w-4 px-1 rounded-full bg-rd-red text-white text-[9px] font-bold flex items-center justify-center">
+      {totalItems}
+    </span>
+  )
+}
+
 export default function MobileNav() {
   const pathname = usePathname()
-  const totalItems = useCartStore((s) => s.totalItems())
 
   if (pathname.startsWith('/admin') || pathname.startsWith('/login') || pathname.startsWith('/registro')) {
     return null
   }
 
   return (
-    <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-xl border-t border-zinc-200">
+    <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-xl border-t border-zinc-200" suppressHydrationWarning>
       <ul className="grid grid-cols-5">
         {ITEMS.map((it) => {
           const active = it.match(pathname)
@@ -37,11 +47,7 @@ export default function MobileNav() {
               >
                 <Icon className="h-5 w-5" />
                 {it.label}
-                {it.href === '/checkout' && totalItems > 0 && (
-                  <span className="absolute top-1.5 right-[28%] h-4 min-w-4 px-1 rounded-full bg-rd-red text-white text-[9px] font-bold flex items-center justify-center">
-                    {totalItems}
-                  </span>
-                )}
+                {it.href === '/checkout' && <CartBadge />}
               </Link>
             </li>
           )

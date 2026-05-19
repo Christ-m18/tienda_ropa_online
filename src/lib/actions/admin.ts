@@ -182,10 +182,17 @@ export async function exportOrdersCSV() {
 
   const { data, error } = await guard.supabase
     .from('orders')
-    .select('id, status, total, payment_method, payment_status, created_at, profiles:profiles!orders_user_id_fkey(full_name, email)')
+    .select('id, user_id, status, total, payment_method, payment_status, created_at')
     .order('created_at', { ascending: false })
     .limit(5000)
   if (error) return { ok: false as const, message: error.message }
+
+  const orderRows = data ?? []
+  const userIds = [...new Set(orderRows.map((o) => o.user_id))]
+  const { data: profilesData } = userIds.length
+    ? await guard.supabase.from('profiles').select('id, full_name, email').in('id', userIds)
+    : { data: [] }
+  const pMap = new Map((profilesData ?? []).map((p) => [p.id, p]))
 
   type Row = {
     id: string
@@ -197,7 +204,10 @@ export async function exportOrdersCSV() {
     profiles: { full_name?: string | null; email?: string | null } | null
   }
 
-  const rows = (data ?? []) as unknown as Row[]
+  const rows = orderRows.map((o) => ({
+    ...o,
+    profiles: pMap.get(o.user_id) ?? null,
+  })) as unknown as Row[]
   const header = ['id', 'fecha', 'cliente', 'email', 'estado', 'metodo_pago', 'estado_pago', 'total']
   const lines = [header.join(',')]
   for (const r of rows) {
