@@ -6,7 +6,7 @@ export const metadata = { title: 'Centro de ayuda | TIENDA RD' }
 const FAQS = [
   {
     q: '¿Cuánto tarda mi pedido en llegar?',
-    a: 'En Distrito Nacional y Santo Domingo: 24 a 48 horas. Resto del país: 48 a 72 horas. Los pedidos hechos los domingos se procesan el lunes.',
+    a: 'Enviamos desde La Vega. Zona local (La Vega, Bonao, Moca): 24 horas. Cibao y Santo Domingo: 24 a 48 horas. Resto del pais: 48 a 72 horas. Los domingos no hay reparto.',
   },
   {
     q: '¿Puedo pagar contra entrega?',

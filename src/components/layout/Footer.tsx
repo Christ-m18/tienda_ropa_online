@@ -128,7 +128,7 @@ export default function Footer() {
 
       <div className="border-t border-white/10">
         <div className="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-3 items-center justify-between text-xs text-zinc-500">
-          <p>© {new Date().getFullYear()} TIENDA RD · Hecho con 🇩🇴 desde Santo Domingo</p>
+          <p>© {new Date().getFullYear()} TIENDA RD · Hecho con 🇩🇴 desde La Vega</p>
           <div className="flex gap-4">
             <Link href="/terminos" className="hover:text-zinc-300">
               Términos

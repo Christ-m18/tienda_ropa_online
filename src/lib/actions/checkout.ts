@@ -32,8 +32,7 @@ const checkoutSchema = z.object({
 
 export type CheckoutInput = z.input<typeof checkoutSchema>
 
-const SHIPPING_FREE_THRESHOLD = 3000
-const FLAT_SHIPPING = 250
+import { calculateShipping } from '@/lib/shipping'
 
 export async function placeOrder(input: CheckoutInput) {
   const parsed = checkoutSchema.safeParse(input)
@@ -61,7 +60,7 @@ export async function placeOrder(input: CheckoutInput) {
     }
   }
 
-  const shipping = subtotal >= SHIPPING_FREE_THRESHOLD ? 0 : FLAT_SHIPPING
+  const shipping = calculateShipping(address.province, subtotal)
   const total = Math.max(0, subtotal + shipping - discount)
 
   // Guardar direccion

@@ -34,25 +34,7 @@ const PAYMENT_METHODS: Array<{
   { id: 'bank_transfer', title: 'Transferencia bancaria', desc: 'BHD, Reservas, Santa Cruz — Entrega preferencial', icon: Building2 },
 ]
 
-const PROVINCES = [
-  'Distrito Nacional',
-  'Santo Domingo',
-  'Santiago',
-  'La Vega',
-  'Puerto Plata',
-  'San Pedro de Macorís',
-  'La Romana',
-  'Higüey',
-  'Bonao',
-  'San Cristóbal',
-  'Barahona',
-  'Moca',
-  'Azua',
-  'Otra',
-]
-
-const SHIPPING_FREE_THRESHOLD = 3000
-const FLAT_SHIPPING = 250
+import { PROVINCES, calculateShipping, getShippingInfo, SHIPPING_FREE_THRESHOLD } from '@/lib/shipping'
 
 type Step = 0 | 1 | 2 | 3
 
@@ -93,7 +75,7 @@ export default function CheckoutFlow({
   const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount: number } | null>(null)
   const [couponPending, setCouponPending] = useState(false)
 
-  const shipping = subtotal >= SHIPPING_FREE_THRESHOLD ? 0 : FLAT_SHIPPING
+  const shipping = calculateShipping(address.province, subtotal)
   const discount = appliedCoupon?.discount ?? 0
   const total = Math.max(0, subtotal + shipping - discount)
 
@@ -238,6 +220,16 @@ export default function CheckoutFlow({
                   </select>
                 </Field>
               </div>
+              {address.province && (
+                <p className="text-xs text-zinc-500 -mt-1">
+                  <Truck className="h-3 w-3 inline mr-1" />
+                  Envio a {address.province}: {subtotal >= SHIPPING_FREE_THRESHOLD ? (
+                    <span className="text-emerald-600 font-bold">Gratis</span>
+                  ) : (
+                    <span className="font-bold">RD${getShippingInfo(address.province).rate}</span>
+                  )} · {getShippingInfo(address.province).time}
+                </p>
+              )}
               <Field label="Código postal (opcional)">
                 <Input
                   value={address.zip_code}

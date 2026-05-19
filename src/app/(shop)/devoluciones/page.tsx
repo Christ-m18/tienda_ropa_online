@@ -18,7 +18,7 @@ export default function DevolucionesPage() {
       <ol className="list-decimal pl-6 space-y-1">
         <li>Entra a <Link href="/perfil/pedidos">Mis pedidos</Link>.</li>
         <li>Escríbenos por WhatsApp al +1 (809) 256-6896 con tu número de orden.</li>
-        <li>Coordinamos la recogida sin costo dentro del Gran Santo Domingo.</li>
+        <li>Coordinamos la recogida sin costo dentro de La Vega y zonas cercanas.</li>
         <li>Recibirás el reembolso o el cambio en 3 a 5 días hábiles.</li>
       </ol>
 

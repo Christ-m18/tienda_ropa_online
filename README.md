@@ -199,5 +199,5 @@ Paleta urbana dominicana:
 
 ---
 
-Hecho con 🇩🇴 desde Santo Domingo.
+Hecho con 🇩🇴 desde La Vega.
 # Tienda_Ropa_Online
