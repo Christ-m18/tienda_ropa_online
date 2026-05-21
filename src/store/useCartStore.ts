@@ -1,6 +1,5 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { useEffect, useState } from 'react'
 
 export interface CartItem {
   id: string
@@ -61,13 +60,9 @@ export const useCartStore = create<CartStore>()(
   )
 )
 
-// Evita mismatch SSR/client retornando 0 hasta que el storage hidrata
+// Returns 0 until zustand storage hydrates to prevent SSR mismatch
 export function useCartCount() {
-  const [count, setCount] = useState(0)
   const hasHydrated = useCartStore((s) => s.hasHydrated)
   const total = useCartStore((s) => s.totalItems())
-  useEffect(() => {
-    if (hasHydrated) setCount(total)
-  }, [hasHydrated, total])
-  return count
+  return hasHydrated ? total : 0
 }

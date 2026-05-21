@@ -1,5 +1,7 @@
 'use client'
 
+import Link from 'next/link'
+
 export default function GlobalError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return (
     <html lang="es">
@@ -13,9 +15,9 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
             <button onClick={reset} className="px-5 h-11 rounded-md bg-rd-red hover:bg-rd-red-dark text-white font-bold">
               Reintentar
             </button>
-            <a href="/" className="px-5 h-11 rounded-md bg-white text-zinc-900 font-bold inline-flex items-center">
+            <Link href="/" className="px-5 h-11 rounded-md bg-white text-zinc-900 font-bold inline-flex items-center">
               Ir al inicio
-            </a>
+            </Link>
           </div>
         </div>
       </body>

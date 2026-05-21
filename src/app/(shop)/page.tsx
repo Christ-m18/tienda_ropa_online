@@ -123,7 +123,7 @@ export default async function HomePage() {
       <section className="container mx-auto px-4 py-16 grid lg:grid-cols-2 gap-12">
         <div>
           <p className="text-rd-red font-bold uppercase tracking-[0.3em] text-xs mb-2">Combos durísimos</p>
-          <h2 className="font-display text-3xl md:text-4xl tracking-tight mb-6">Ofertas pa'l bolsillo</h2>
+          <h2 className="font-display text-3xl md:text-4xl tracking-tight mb-6">Ofertas pa&apos;l bolsillo</h2>
           <div className="grid grid-cols-2 gap-4">
             {deals.map((p) => (
               <Link key={p.id} href={`/productos/${p.slug ?? p.id}`} className="group block relative aspect-[4/5] rounded-2xl overflow-hidden">
@@ -164,7 +164,7 @@ export default async function HomePage() {
         <div className="container mx-auto px-4 py-16 relative grid md:grid-cols-2 gap-8 items-center">
           <div>
             <h3 className="font-display text-4xl md:text-5xl tracking-tight">¿Primera compra?</h3>
-            <p className="mt-3 text-white/90 text-lg">Activa tu cupón <b className="text-rd-yellow">BIENVENIDA20</b> y llévate 20% de descuento en tu primera orden. Pa' que arranques con flow.</p>
+            <p className="mt-3 text-white/90 text-lg">Activa tu cupón <b className="text-rd-yellow">BIENVENIDA20</b> y llévate 20% de descuento en tu primera orden. Pa&apos; que arranques con flow.</p>
           </div>
           <div className="flex md:justify-end">
             <Link href="/registro">

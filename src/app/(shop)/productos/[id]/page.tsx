@@ -165,7 +165,7 @@ export default async function ProductDetailPage({ params }: { params: RouteParam
         {/* Related */}
         {related.length > 0 && (
           <section className="mt-20">
-            <p className="text-rd-red font-bold uppercase tracking-[0.3em] text-xs mb-2">Pa' que combines</p>
+            <p className="text-rd-red font-bold uppercase tracking-[0.3em] text-xs mb-2">Pa&apos; que combines</p>
             <h2 className="font-display text-3xl md:text-4xl tracking-tight mb-6">Te puede gustar también</h2>
             <ProductGrid products={related} wishlistIds={wishlistIds} />
           </section>

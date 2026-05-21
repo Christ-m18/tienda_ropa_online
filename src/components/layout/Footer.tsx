@@ -32,7 +32,7 @@ export default function Footer() {
             TIENDA<span className="text-rd-red">RD</span>
           </h3>
           <p className="text-sm text-zinc-400">
-            El flow del Caribe en tu closet. Streetwear con sabor dominicano, hecho pa' la calle.
+            El flow del Caribe en tu closet. Streetwear con sabor dominicano, hecho pa&apos; la calle.
           </p>
           <div className="flex gap-3 pt-2">
             <Link

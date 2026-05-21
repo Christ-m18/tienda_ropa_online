@@ -100,12 +100,14 @@ function BarTooltip({ active, payload }: ChartTooltipProps) {
 
 // ── Componente principal ──────────────────────────────────────────────────────
 
+const INITIAL_DATA_TS = Date.now()
+
 export default function DashboardCharts({ metrics: initialMetrics }: { metrics: AdminMetrics }) {
   const { data: metrics, dataUpdatedAt } = useQuery({
     queryKey: ['admin-chart-data'],
     queryFn: getChartDataAction,
     initialData: initialMetrics,
-    initialDataUpdatedAt: Date.now(),
+    initialDataUpdatedAt: INITIAL_DATA_TS,
     staleTime: 60_000,
     refetchInterval: 60_000,
     refetchOnWindowFocus: false,
