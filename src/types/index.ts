@@ -126,6 +126,7 @@ export interface PaymentProof {
   user_id: string
   file_path: string
   bank_name?: string | null
+  bank_account_id?: string | null
   reference_number?: string | null
   amount?: number | null
   notes?: string | null
@@ -146,5 +147,17 @@ export interface Notification {
   type: NotificationType
   link?: string | null
   read: boolean
+  created_at: string
+}
+
+export interface BankAccount {
+  id: string
+  bank_name: string
+  account_number: string
+  account_holder?: string | null
+  account_type?: string | null
+  display_color?: string | null
+  is_active: boolean
+  sort_order: number
   created_at: string
 }
