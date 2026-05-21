@@ -94,11 +94,12 @@ export async function getUserNotifications(limit = 20) {
 
 export async function getActiveBankAccounts(): Promise<BankAccount[]> {
   const supabase = await createClient()
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('bank_accounts')
-    .select('id, bank_name, account_number, account_holder, account_type, display_color, sort_order')
+    .select('id, bank_name, account_number, account_holder, account_type, display_color, sort_order, created_at')
     .eq('is_active', true)
     .order('sort_order')
+  if (error) throw error
   return (data ?? []) as BankAccount[]
 }
 
@@ -106,10 +107,12 @@ export async function getOrderPaymentProofs(orderId: string) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return []
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('payment_proofs')
     .select('id, status, bank_name, reference_number, amount, notes, created_at, rejection_reason, reviewed_at')
     .eq('order_id', orderId)
+    .eq('user_id', user.id)
     .order('created_at', { ascending: false })
+  if (error) throw error
   return (data ?? []) as Pick<PaymentProof, 'id' | 'status' | 'bank_name' | 'reference_number' | 'amount' | 'notes' | 'created_at' | 'rejection_reason' | 'reviewed_at'>[]
 }
