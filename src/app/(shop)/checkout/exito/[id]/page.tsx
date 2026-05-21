@@ -12,7 +12,7 @@ export default async function CheckoutSuccessPage({ params }: { params: RoutePar
   const { id } = await params
   const [order, bankAccounts] = await Promise.all([
     getOrderById(id),
-    getActiveBankAccounts(),
+    getActiveBankAccounts().catch(() => [] as import('@/types').BankAccount[]),
   ])
   if (!order) notFound()
 
