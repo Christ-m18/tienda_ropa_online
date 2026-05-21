@@ -32,10 +32,13 @@ export default function BankTransferInstructions({ orderId, orderTotal, bankAcco
   const displayRef = selected ? buildDisplayRef(orderId, selected.bank_name) : null
 
   function copyAccount(bankId: string, account: string) {
-    navigator.clipboard.writeText(account)
-    setCopiedId(bankId)
-    toast.success('Número de cuenta copiado')
-    setTimeout(() => setCopiedId(null), 2000)
+    navigator.clipboard.writeText(account).then(() => {
+      setCopiedId(bankId)
+      toast.success('Número de cuenta copiado')
+      setTimeout(() => setCopiedId(null), 2000)
+    }).catch(() => {
+      toast.error('No se pudo copiar. Cópialo manualmente.')
+    })
   }
 
   function handleSubmit(e: React.FormEvent) {
@@ -102,11 +105,13 @@ export default function BankTransferInstructions({ orderId, orderTotal, bankAcco
             const isSelected = selectedId === bank.id
             const isCopied = copiedId === bank.id
             return (
-              <button
+              <div
                 key={bank.id}
-                type="button"
+                role="button"
+                tabIndex={0}
                 onClick={() => setSelectedId(bank.id)}
-                className={`w-full text-left rounded-xl p-3 sm:p-4 border-2 transition-all ${
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedId(bank.id) } }}
+                className={`w-full text-left rounded-xl p-3 sm:p-4 border-2 transition-all cursor-pointer ${
                   isSelected
                     ? 'border-rd-blue bg-white shadow-sm'
                     : 'border-zinc-200 bg-white hover:border-zinc-300'
@@ -154,7 +159,7 @@ export default function BankTransferInstructions({ orderId, orderTotal, bankAcco
                     )}
                   </div>
                 </div>
-              </button>
+              </div>
             )
           })}
         </div>
@@ -193,8 +198,9 @@ export default function BankTransferInstructions({ orderId, orderTotal, bankAcco
         </p>
 
         <div>
-          <label className="text-sm text-zinc-600 mb-1 block">Notas (opcional)</label>
+          <label htmlFor="notes-input" className="text-sm text-zinc-600 mb-1 block">Notas (opcional)</label>
           <Input
+            id="notes-input"
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Información adicional..."
