@@ -160,7 +160,7 @@ export default async function AdminOrderDetailPage({ params }: { params: RoutePa
               <p className="text-xs uppercase tracking-wider text-zinc-500 font-bold mb-2">
                 Comprobante de transferencia
               </p>
-              <VoucherReview proofs={proofs} signedUrls={signedUrls} />
+              <VoucherReview proofs={proofs} signedUrls={signedUrls} orderTotal={total} />
             </div>
           )}
 

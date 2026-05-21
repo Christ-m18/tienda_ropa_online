@@ -18,9 +18,11 @@ const STATUS_CONFIG = {
 export default function VoucherReview({
   proofs,
   signedUrls,
+  orderTotal,
 }: {
   proofs: PaymentProof[]
   signedUrls: Record<string, string>
+  orderTotal: number
 }) {
   if (proofs.length === 0) {
     return (
@@ -34,13 +36,13 @@ export default function VoucherReview({
   return (
     <div className="space-y-4">
       {proofs.map((proof) => (
-        <ProofCard key={proof.id} proof={proof} signedUrl={signedUrls[proof.id]} />
+        <ProofCard key={proof.id} proof={proof} signedUrl={signedUrls[proof.id]} orderTotal={orderTotal} />
       ))}
     </div>
   )
 }
 
-function ProofCard({ proof, signedUrl }: { proof: PaymentProof; signedUrl?: string }) {
+function ProofCard({ proof, signedUrl, orderTotal }: { proof: PaymentProof; signedUrl?: string; orderTotal: number }) {
   const [pending, startTransition] = useTransition()
   const [rejectionReason, setRejectionReason] = useState('')
   const [showReject, setShowReject] = useState(false)
@@ -90,6 +92,25 @@ function ProofCard({ proof, signedUrl }: { proof: PaymentProof; signedUrl?: stri
           <div>
             <span className="text-xs text-zinc-400">Fecha envio</span>
             <p className="font-medium">{formatDate(proof.created_at)}</p>
+          </div>
+          <div className="sm:col-span-2 bg-zinc-50 rounded-lg p-3 space-y-1">
+            <div className="flex justify-between text-sm">
+              <span className="text-xs text-zinc-400">Monto esperado (pedido)</span>
+              <span className="font-display text-base text-zinc-800">{formatRD(orderTotal)}</span>
+            </div>
+            {proof.amount != null && (
+              <div className="flex justify-between text-sm">
+                <span className="text-xs text-zinc-400">Monto reportado</span>
+                <span className={`font-display text-base ${
+                  Math.abs(proof.amount - orderTotal) < 1
+                    ? 'text-emerald-700'
+                    : 'text-red-600 font-bold'
+                }`}>
+                  {formatRD(proof.amount)}
+                  {Math.abs(proof.amount - orderTotal) >= 1 && ' ⚠️'}
+                </span>
+              </div>
+            )}
           </div>
           {proof.notes && (
             <div className="sm:col-span-2">
