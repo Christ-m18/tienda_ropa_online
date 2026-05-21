@@ -9,9 +9,7 @@ const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf
 
 const uploadSchema = z.object({
   order_id: z.string().uuid(),
-  bank_name: z.string().min(1, 'Selecciona un banco'),
-  reference_number: z.string().min(1, 'Ingresa el número de referencia'),
-  amount: z.coerce.number().positive('Ingresa el monto transferido'),
+  bank_account_id: z.string().uuid(),
   notes: z.string().optional(),
 })
 
@@ -27,26 +25,50 @@ export async function uploadVoucher(formData: FormData) {
 
   const parsed = uploadSchema.safeParse({
     order_id: formData.get('order_id'),
-    bank_name: formData.get('bank_name'),
-    reference_number: formData.get('reference_number'),
-    amount: formData.get('amount'),
-    notes: formData.get('notes'),
+    bank_account_id: formData.get('bank_account_id'),
+    notes: formData.get('notes') || undefined,
   })
   if (!parsed.success) return { ok: false as const, message: parsed.error.issues[0]?.message ?? 'Datos inválidos' }
 
-  // Verify the order belongs to this user and is bank_transfer
+  // Validate order: must belong to user, be bank_transfer, still pending
   const { data: order } = await supabase
     .from('orders')
-    .select('id, payment_method')
+    .select('id, user_id, payment_method, status, payment_status, total')
     .eq('id', parsed.data.order_id)
     .eq('user_id', user.id)
     .maybeSingle()
   if (!order) return { ok: false as const, message: 'Pedido no encontrado' }
   if (order.payment_method !== 'bank_transfer') return { ok: false as const, message: 'Este pedido no usa transferencia bancaria' }
+  if (order.status !== 'pending') return { ok: false as const, message: 'Este pedido ya no está en estado pendiente' }
+  if (order.payment_status !== 'pending') return { ok: false as const, message: 'El pago de este pedido ya fue procesado' }
+
+  // Prevent duplicate proofs
+  const { count: existingCount } = await supabase
+    .from('payment_proofs')
+    .select('id', { count: 'exact', head: true })
+    .eq('order_id', order.id)
+    .in('status', ['pending', 'approved'])
+  if ((existingCount ?? 0) > 0) {
+    return { ok: false as const, message: 'Ya existe un comprobante pendiente o aprobado para este pedido' }
+  }
+
+  // Validate bank account is active
+  const { data: bankAccount } = await supabase
+    .from('bank_accounts')
+    .select('id, bank_name')
+    .eq('id', parsed.data.bank_account_id)
+    .eq('is_active', true)
+    .maybeSingle()
+  if (!bankAccount) return { ok: false as const, message: 'Cuenta bancaria no válida' }
+
+  // Generate reference and amount server-side — never trust client for these
+  const bankCode = bankAccount.bank_name.split(' ').pop()?.slice(0, 3).toUpperCase() ?? 'BNK'
+  const reference_number = `${order.id.slice(0, 8).toUpperCase()}-${bankCode}`
+  const amount = Number(order.total)
 
   // Upload file to storage
   const ext = file.name.split('.').pop() ?? 'jpg'
-  const filePath = `${user.id}/${parsed.data.order_id}/${Date.now()}.${ext}`
+  const filePath = `${user.id}/${order.id}/${Date.now()}.${ext}`
   const { error: uploadError } = await supabase.storage
     .from('payment-vouchers')
     .upload(filePath, file, { contentType: file.type, upsert: false })
@@ -54,26 +76,27 @@ export async function uploadVoucher(formData: FormData) {
 
   // Create payment proof record
   const { error: insertError } = await supabase.from('payment_proofs').insert({
-    order_id: parsed.data.order_id,
+    order_id: order.id,
     user_id: user.id,
     file_path: filePath,
-    bank_name: parsed.data.bank_name,
-    reference_number: parsed.data.reference_number,
-    amount: parsed.data.amount,
+    bank_name: bankAccount.bank_name,
+    bank_account_id: parsed.data.bank_account_id,
+    reference_number,
+    amount,
     notes: parsed.data.notes || null,
   })
   if (insertError) return { ok: false as const, message: 'Error al guardar el comprobante' }
 
-  // Notification - confirm receipt
+  // Notify user
   await supabase.from('notifications').insert({
     user_id: user.id,
     title: 'Comprobante recibido',
-    message: `Tu comprobante para el pedido #${parsed.data.order_id.slice(0, 8)} está siendo revisado.`,
+    message: `Tu comprobante para el pedido #${order.id.slice(0, 8)} está siendo revisado.`,
     type: 'order',
-    link: `/perfil/pedidos/${parsed.data.order_id}`,
+    link: `/perfil/pedidos/${order.id}`,
   })
 
-  revalidatePath(`/perfil/pedidos/${parsed.data.order_id}`)
+  revalidatePath(`/perfil/pedidos/${order.id}`)
   revalidatePath('/admin/ordenes')
   return { ok: true as const }
 }
