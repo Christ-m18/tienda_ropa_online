@@ -1,7 +1,7 @@
 import 'server-only'
 import { cache } from 'react'
 import { createClient } from '@/utils/supabase/server'
-import type { Address, Notification, Order, Profile, Wishlist } from '@/types'
+import type { Address, BankAccount, Notification, Order, PaymentProof, Profile, Wishlist } from '@/types'
 
 export const getCurrentUser = cache(async () => {
   const supabase = await createClient()
@@ -90,4 +90,26 @@ export async function getUserNotifications(limit = 20) {
     .limit(limit)
   if (error) throw error
   return (data ?? []) as Notification[]
+}
+
+export async function getActiveBankAccounts(): Promise<BankAccount[]> {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('bank_accounts')
+    .select('id, bank_name, account_number, account_holder, account_type, display_color, sort_order')
+    .eq('is_active', true)
+    .order('sort_order')
+  return (data ?? []) as BankAccount[]
+}
+
+export async function getOrderPaymentProofs(orderId: string) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return []
+  const { data } = await supabase
+    .from('payment_proofs')
+    .select('id, status, bank_name, reference_number, amount, notes, created_at, rejection_reason, reviewed_at')
+    .eq('order_id', orderId)
+    .order('created_at', { ascending: false })
+  return (data ?? []) as Pick<PaymentProof, 'id' | 'status' | 'bank_name' | 'reference_number' | 'amount' | 'notes' | 'created_at' | 'rejection_reason' | 'reviewed_at'>[]
 }
