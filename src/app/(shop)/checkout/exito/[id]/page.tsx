@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { CheckCircle2, Package } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { getOrderById } from '@/lib/queries/user'
+import { getOrderById, getActiveBankAccounts } from '@/lib/queries/user'
 import { formatRD, formatDate } from '@/lib/format'
 import BankTransferInstructions from '@/components/checkout/BankTransferInstructions'
 
@@ -14,6 +14,7 @@ export default async function CheckoutSuccessPage({ params }: { params: RoutePar
   if (!order) notFound()
 
   const isBankTransfer = order.payment_method === 'bank_transfer'
+  const bankAccounts = isBankTransfer ? await getActiveBankAccounts() : []
 
   return (
     <div className="container mx-auto px-4 py-16 max-w-2xl">
@@ -36,7 +37,7 @@ export default async function CheckoutSuccessPage({ params }: { params: RoutePar
 
         {isBankTransfer && (
           <div className="mt-8 text-left">
-            <BankTransferInstructions orderId={order.id} />
+            <BankTransferInstructions orderId={order.id} orderTotal={order.total} bankAccounts={bankAccounts} />
           </div>
         )}
 
