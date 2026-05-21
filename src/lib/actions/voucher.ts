@@ -123,7 +123,7 @@ export async function reviewPaymentProof(formData: FormData) {
   const parsed = reviewSchema.safeParse({
     proof_id: formData.get('proof_id'),
     action: formData.get('action'),
-    rejection_reason: formData.get('rejection_reason'),
+    rejection_reason: formData.get('rejection_reason') || undefined,
   })
   if (!parsed.success) return { ok: false as const, message: 'Datos inválidos' }
 
