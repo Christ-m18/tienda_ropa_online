@@ -34,7 +34,7 @@ export async function updateSession(request: NextRequest) {
 
   const url = request.nextUrl
   const path = url.pathname
-  const protectedPaths = ['/perfil', '/checkout', '/admin']
+  const protectedPaths = ['/perfil', '/checkout', '/admin', '/completar-perfil']
   const adminPaths = ['/admin']
   const authPaths = ['/login', '/registro', '/recuperar']
 

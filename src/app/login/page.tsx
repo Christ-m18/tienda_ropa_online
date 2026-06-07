@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { AlertTriangle, ShieldX } from 'lucide-react'
+import { AlertTriangle, ShieldX, XCircle } from 'lucide-react'
 import LoginForm from './login-form'
 
 type SearchParams = Promise<{ redirect?: string; reason?: string }>
@@ -19,6 +19,17 @@ export default async function LoginPage({ searchParams }: { searchParams: Search
           <h1 className="text-2xl md:text-3xl font-display mt-6 text-white">Qué lo qué, bro</h1>
           <p className="text-zinc-400 mt-2">Entra a tu cuenta y sigue el flow</p>
         </div>
+
+        {reason === 'auth_error' && (
+          <div className="mb-6 rounded-xl border border-red-500/40 bg-red-950/60 p-4">
+            <div className="flex items-start gap-3">
+              <XCircle className="h-5 w-5 text-red-400 shrink-0 mt-0.5" />
+              <p className="text-sm text-red-300">
+                Ocurrió un error al autenticar con el proveedor. Por favor, intentá de nuevo.
+              </p>
+            </div>
+          </div>
+        )}
 
         {reason === 'blocked' && (
           <div className="mb-6 rounded-xl border border-red-500/40 bg-red-950/60 p-4">

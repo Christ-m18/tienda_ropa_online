@@ -63,16 +63,45 @@ export async function registerAction(_: ActionState, formData: FormData): Promis
     return { status: 'error', message: parsed.error.issues[0]?.message ?? 'Datos inválidos' }
   }
   const supabase = await createClient()
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
   const { error } = await supabase.auth.signUp({
     email: parsed.data.email,
     password: parsed.data.password,
-    options: { data: { full_name: parsed.data.full_name } },
+    options: {
+      data: { full_name: parsed.data.full_name },
+      emailRedirectTo: `${siteUrl}/auth/callback`,
+    },
   })
   if (error) {
     return { status: 'error', message: error.message }
   }
   revalidatePath('/', 'layout')
   redirect(`/registro/exito?email=${encodeURIComponent(parsed.data.email)}`)
+}
+
+export async function completeProfileAction(
+  _: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  const full_name = (formData.get('full_name') as string)?.trim()
+  if (!full_name || full_name.length < 2) {
+    return { status: 'error', message: 'El nombre debe tener al menos 2 caracteres' }
+  }
+  const supabase = await createClient()
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser()
+  if (authError || !user) {
+    return { status: 'error', message: 'Sesión no válida' }
+  }
+  const { error } = await supabase.from('profiles').update({ full_name }).eq('id', user.id)
+  if (error) {
+    return { status: 'error', message: error.message }
+  }
+  const next = (formData.get('next') as string) || '/'
+  revalidatePath('/', 'layout')
+  redirect(next)
 }
 
 export async function logoutAction() {
