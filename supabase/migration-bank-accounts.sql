@@ -38,7 +38,7 @@ create index if not exists payment_proofs_bank_account_id_idx
 insert into public.bank_accounts
   (bank_name, account_number, account_holder, account_type, display_color, sort_order)
 values
-  ('Banco de Reservas', '9601750827',     'Tienda RD', 'Corriente', '#16a34a', 1),
-  ('Banco BHD',         '38675820016',    'Tienda RD', 'Ahorro',    '#1d4ed8', 2),
-  ('Banco Santa Cruz',  '11145000018017', 'Tienda RD', 'Corriente', '#b91c1c', 3)
+  ('Banco de Reservas', '9601750827',     'Cora Mely', 'Corriente', '#16a34a', 1),
+  ('Banco BHD',         '38675820016',    'Cora Mely', 'Ahorro',    '#1d4ed8', 2),
+  ('Banco Santa Cruz',  '11145000018017', 'Cora Mely', 'Corriente', '#b91c1c', 3)
 on conflict (bank_name) do nothing;

@@ -1,6 +1,6 @@
 import InfoPage from '@/components/layout/InfoPage'
 
-export const metadata = { title: 'Política de privacidad | TIENDA RD' }
+export const metadata = { title: 'Política de privacidad | Cora Mely' }
 
 export default function PrivacidadPage() {
   return (
@@ -33,13 +33,13 @@ export default function PrivacidadPage() {
       <p>Usamos cookies para mantener tu sesión y guardar tu carrito. No usamos cookies de seguimiento publicitario.</p>
 
       <h2>5. Tus derechos</h2>
-      <p>Puedes pedirnos en cualquier momento que actualicemos o borremos tus datos escribiendo a hola@tiendard.do.</p>
+      <p>Puedes pedirnos en cualquier momento que actualicemos o borremos tus datos escribiendo a hola@coramely.do.</p>
 
       <h2>6. Seguridad</h2>
       <p>Aplicamos cifrado en tránsito (HTTPS) y políticas de acceso fila por fila en la base de datos.</p>
 
       <h2>7. Contacto</h2>
-      <p>Si tienes dudas sobre privacidad escríbenos a hola@tiendard.do.</p>
+      <p>Si tienes dudas sobre privacidad escríbenos a hola@coramely.do.</p>
     </InfoPage>
   )
 }

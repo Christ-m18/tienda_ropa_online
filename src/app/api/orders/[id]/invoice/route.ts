@@ -87,7 +87,7 @@ export async function GET(
 <body>
   <div class="header">
     <div>
-      <div class="brand">Tienda RD</div>
+      <div class="brand">Cora Mely</div>
       <div class="brand-sub">República Dominicana</div>
     </div>
     <div class="invoice-meta">
@@ -141,7 +141,7 @@ export async function GET(
   </div>
 
   <div class="footer">
-    <p>Gracias por tu compra · Tienda RD · República Dominicana</p>
+    <p>Gracias por tu compra · Cora Mely · República Dominicana</p>
     <p style="margin-top:4px">Este documento es una factura de compra. Para devoluciones contacta a soporte.</p>
   </div>
 

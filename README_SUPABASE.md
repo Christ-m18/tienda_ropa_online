@@ -47,4 +47,4 @@ docker-compose up --build
 - [x] Navbar y Footer responsive.
 - [x] Landing Page optimizada para conversión.
 - [x] Componentes base de shadcn/ui.
-- [x] Estructura de base de d
+- [x] Estructura de base de datos lista para Supabase.
