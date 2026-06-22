@@ -1,9 +1,9 @@
 import type { MetadataRoute } from 'next'
 import { createClient } from '@/utils/supabase/server'
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://tiendard.do'
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://coramely.do'
 
-const CATEGORY_SLUGS = ['hombre', 'mujer', 'accesorios']
+const CATEGORY_SLUGS = ['macrame', 'cuadros-texturizados', 'esculturas-yeso', 'decoracion-mesa', 'piezas-pared']
 
 const INFO_PAGES = [
   { path: '/ayuda', priority: 0.5 },

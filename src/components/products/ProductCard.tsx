@@ -76,7 +76,7 @@ function ProductCard({
               <Badge className="bg-rd-red text-white font-bold uppercase tracking-wider">-{off}%</Badge>
             )}
             {product.is_featured && (
-              <Badge className="bg-rd-yellow text-rd-charcoal font-bold uppercase tracking-wider">Tá fuego</Badge>
+              <Badge className="bg-rd-yellow text-rd-charcoal font-bold uppercase tracking-wider">Pieza destacada</Badge>
             )}
             {product.stock === 0 && (
               <Badge variant="secondary" className="bg-zinc-900 text-white">Agotado</Badge>

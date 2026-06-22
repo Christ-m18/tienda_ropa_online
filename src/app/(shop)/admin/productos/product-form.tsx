@@ -69,6 +69,25 @@ export default function ProductForm({ product, categories }: { product?: Product
         </select>
       </Field>
 
+      <div className="grid sm:grid-cols-2 gap-4">
+        <Field label="Materiales (opcional)">
+          <Input name="materials" placeholder="Algodón macramé, madera de pino" defaultValue={product?.materials ?? ''} />
+        </Field>
+        <Field label="Dimensiones (opcional)">
+          <Input name="dimensions" placeholder="60 x 90 cm" defaultValue={product?.dimensions ?? ''} />
+        </Field>
+      </div>
+
+      <Field label="Cuidado de la pieza (opcional)">
+        <textarea
+          name="care_instructions"
+          rows={3}
+          defaultValue={product?.care_instructions ?? ''}
+          placeholder="Limpiar con paño seco, evitar humedad y luz solar directa"
+          className="w-full rounded-md border border-zinc-200 bg-white p-3 text-sm focus:outline-none focus:ring-2 focus:ring-rd-red"
+        />
+      </Field>
+
       <Field label="Imágenes (una URL por línea)">
         <textarea
           name="images"

@@ -10,12 +10,12 @@ const bebas = Bebas_Neue({ weight: '400', subsets: ['latin'], variable: '--font-
 const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' })
 
 export const metadata: Metadata = {
-  title: 'TIENDA RD | Moda Urbana Dominicana',
-  description: 'Ropa urbana, streetwear y accesorios con flow caribeño. Envíos a toda República Dominicana. Pago contra entrega disponible.',
-  keywords: ['ropa', 'streetwear', 'república dominicana', 'tienda online', 'urbano', 'caribe'],
+  title: 'Cora Mely | Decoración artesanal para el hogar',
+  description: 'Macramé, cuadros texturizados, esculturas en yeso y piezas decorativas hechas a mano en República Dominicana. Envíos a todo el país, pago contra entrega y transferencia.',
+  keywords: ['decoración artesanal', 'macramé', 'esculturas de yeso', 'cuadros texturizados', 'república dominicana', 'hecho a mano', 'decoración para el hogar'],
   openGraph: {
-    title: 'TIENDA RD - Moda Urbana Dominicana',
-    description: 'El flow del Caribe en tu closet. Envíos rápidos a toda RD.',
+    title: 'Cora Mely - Decoración artesanal hecha a mano',
+    description: 'Piezas únicas en macramé, yeso y fibras naturales para tu hogar. Envíos cuidadosos a toda RD.',
     locale: 'es_DO',
     type: 'website',
   },

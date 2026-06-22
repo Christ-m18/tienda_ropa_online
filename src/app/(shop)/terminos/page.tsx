@@ -1,12 +1,12 @@
 import InfoPage from '@/components/layout/InfoPage'
 
-export const metadata = { title: 'Términos y condiciones | TIENDA RD' }
+export const metadata = { title: 'Términos y condiciones | Cora Mely' }
 
 export default function TerminosPage() {
   return (
     <InfoPage title="Términos y condiciones" subtitle="Última actualización: abril 2026">
       <h2>1. Sobre nosotros</h2>
-      <p>TIENDA RD es una tienda online de ropa urbana operada en República Dominicana. Al usar este sitio aceptas estos términos.</p>
+      <p>Cora Mely es una tienda online de decoración artesanal hecha a mano, operada en República Dominicana. Al usar este sitio aceptas estos términos.</p>
 
       <h2>2. Cuenta</h2>
       <ul>
@@ -33,7 +33,7 @@ export default function TerminosPage() {
       </ul>
 
       <h2>6. Propiedad intelectual</h2>
-      <p>Todo el contenido del sitio (textos, imágenes, marca) pertenece a TIENDA RD o a sus licenciantes. Está prohibido reproducirlo sin autorización.</p>
+      <p>Todo el contenido del sitio (textos, imágenes, marca) pertenece a Cora Mely o a sus licenciantes. Está prohibido reproducirlo sin autorización.</p>
 
       <h2>7. Limitación de responsabilidad</h2>
       <p>El sitio se ofrece tal cual. No garantizamos disponibilidad continua ni que esté libre de errores.</p>

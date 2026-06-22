@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { ArrowRight, Flame, Truck, ShieldCheck, Zap } from 'lucide-react'
+import { ArrowRight, Sparkles, Truck, ShieldCheck, Zap } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import ProductGrid from '@/components/products/ProductGrid'
@@ -25,8 +25,8 @@ export default async function HomePage() {
       <section className="relative isolate overflow-hidden bg-rd-charcoal text-white">
         <div className="absolute inset-0 -z-10 opacity-50">
           <Image
-            src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070"
-            alt="Streetwear dominicano"
+            src="https://images.unsplash.com/photo-1635286785966-512198a553ca?q=80&w=2070"
+            alt="Macramé colgante en un dormitorio cálido y artesanal"
             fill
             priority
             className="object-cover"
@@ -35,19 +35,19 @@ export default async function HomePage() {
         </div>
         <div className="container mx-auto px-4 py-20 md:py-32 relative">
           <div className="max-w-2xl space-y-6">
-            <Badge className="bg-rd-yellow text-rd-charcoal font-bold uppercase tracking-widest">Hecho en RD 🇩🇴</Badge>
+            <Badge className="bg-rd-yellow text-rd-charcoal font-bold uppercase tracking-widest">Hecho a mano en RD 🇩🇴</Badge>
             <h1 className="font-display text-6xl md:text-8xl leading-none tracking-tight">
-              EL FLOW <span className="text-rd-red">DEL</span><br />
-              CARIBE EN TU<br />
-              <span className="text-rd-yellow">CLOSET</span>
+              PIEZAS QUE <span className="text-rd-red">VISTEN</span><br />
+              TU HOGAR<br />
+              <span className="text-rd-yellow">CON TEXTURA</span>
             </h1>
             <p className="text-lg md:text-xl text-zinc-300 max-w-lg">
-              Streetwear, accesorios y vibes urbanos para los que viven la calle dominicana. Envíos rápidos a toda RD, pago contra entrega disponible.
+              Macramé, cuadros texturizados y esculturas en yeso hechas a mano en República Dominicana. Cada pieza es única. Envíos cuidadosos a toda RD, pago contra entrega disponible.
             </p>
             <div className="flex flex-wrap gap-4 pt-2">
               <Link href="/productos">
                 <Button size="lg" className="h-14 px-8 bg-rd-red hover:bg-rd-red-dark text-white font-display tracking-wider text-lg">
-                  Comprar ahora <ArrowRight className="ml-2 h-5 w-5" />
+                  Ver piezas <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
               <Link href="/productos?onSale=1">
@@ -70,7 +70,7 @@ export default async function HomePage() {
         <div className="flex items-end justify-between mb-8">
           <div>
             <p className="text-rd-red font-bold uppercase tracking-[0.3em] text-xs">Explora</p>
-            <h2 className="font-display text-4xl md:text-5xl tracking-tight">Tu estilo, tu calle</h2>
+            <h2 className="font-display text-4xl md:text-5xl tracking-tight">Cada pieza, una historia</h2>
           </div>
           <Link href="/productos" className="text-sm font-bold uppercase tracking-wider hover:text-rd-red flex items-center gap-1">
             Ver todo <ArrowRight className="h-4 w-4" />
@@ -93,7 +93,7 @@ export default async function HomePage() {
                 <span className="text-xs uppercase tracking-[0.3em] text-rd-yellow mb-2">0{i + 1}</span>
                 <h3 className="font-display text-4xl md:text-5xl text-white tracking-tight">{cat.name}</h3>
                 <span className="mt-3 inline-flex items-center text-sm text-white/90 font-bold uppercase tracking-wider group-hover:text-rd-yellow">
-                  Comprar <ArrowRight className="ml-1 h-4 w-4" />
+                  Ver piezas <ArrowRight className="ml-1 h-4 w-4" />
                 </span>
               </div>
             </Link>
@@ -102,14 +102,14 @@ export default async function HomePage() {
       </section>
 
       {/* Featured products */}
-      <section className="bg-rd-bone py-16 urban-stripes">
+      <section className="bg-rd-bone py-16 woven-texture">
         <div className="container mx-auto px-4">
           <div className="flex items-end justify-between mb-8">
             <div>
               <p className="text-rd-red font-bold uppercase tracking-[0.3em] text-xs flex items-center gap-1">
-                <Flame className="h-3.5 w-3.5" /> Lo más caliente
+                <Sparkles className="h-3.5 w-3.5" /> Hecho a mano
               </p>
-              <h2 className="font-display text-4xl md:text-5xl tracking-tight">Productos destacados</h2>
+              <h2 className="font-display text-4xl md:text-5xl tracking-tight">Piezas destacadas</h2>
             </div>
             <Link href="/productos" className="hidden md:flex text-sm font-bold uppercase tracking-wider hover:text-rd-red items-center gap-1">
               Ver todo <ArrowRight className="h-4 w-4" />
@@ -122,8 +122,8 @@ export default async function HomePage() {
       {/* Deals + Best sellers */}
       <section className="container mx-auto px-4 py-16 grid lg:grid-cols-2 gap-12">
         <div>
-          <p className="text-rd-red font-bold uppercase tracking-[0.3em] text-xs mb-2">Combos durísimos</p>
-          <h2 className="font-display text-3xl md:text-4xl tracking-tight mb-6">Ofertas pa&apos;l bolsillo</h2>
+          <p className="text-rd-red font-bold uppercase tracking-[0.3em] text-xs mb-2">Precios especiales</p>
+          <h2 className="font-display text-3xl md:text-4xl tracking-tight mb-6">Ofertas para tu espacio</h2>
           <div className="grid grid-cols-2 gap-4">
             {deals.map((p) => (
               <Link key={p.id} href={`/productos/${p.slug ?? p.id}`} className="group block relative aspect-[4/5] rounded-2xl overflow-hidden">
@@ -138,8 +138,8 @@ export default async function HomePage() {
           </div>
         </div>
         <div>
-          <p className="text-rd-red font-bold uppercase tracking-[0.3em] text-xs mb-2">Top ventas</p>
-          <h2 className="font-display text-3xl md:text-4xl tracking-tight mb-6">Lo que el barrio compra</h2>
+          <p className="text-rd-red font-bold uppercase tracking-[0.3em] text-xs mb-2">Las favoritas</p>
+          <h2 className="font-display text-3xl md:text-4xl tracking-tight mb-6">Lo que más eligen para su hogar</h2>
           <div className="space-y-3">
             {bestSellers.map((p, i) => (
               <Link key={p.id} href={`/productos/${p.slug ?? p.id}`} className="group flex items-center gap-4 p-3 rounded-2xl hover:bg-zinc-100 transition">
@@ -149,7 +149,7 @@ export default async function HomePage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-bold line-clamp-1 group-hover:text-rd-red">{p.name}</p>
-                  <p className="text-sm text-zinc-500">{p.sales_count}+ vendidos · ⭐ {p.rating.toFixed(1)}</p>
+                  <p className="text-sm text-zinc-500">{p.sales_count}+ hogares ya la tienen · ⭐ {p.rating.toFixed(1)}</p>
                 </div>
                 <p className="font-display text-xl">RD${p.discount_price ?? p.price}</p>
               </Link>
@@ -160,11 +160,11 @@ export default async function HomePage() {
 
       {/* CTA strip */}
       <section className="relative bg-rd-red text-white overflow-hidden">
-        <div className="absolute inset-0 opacity-10 urban-stripes" />
+        <div className="absolute inset-0 opacity-10 woven-texture" />
         <div className="container mx-auto px-4 py-16 relative grid md:grid-cols-2 gap-8 items-center">
           <div>
             <h3 className="font-display text-4xl md:text-5xl tracking-tight">¿Primera compra?</h3>
-            <p className="mt-3 text-white/90 text-lg">Activa tu cupón <b className="text-rd-yellow">BIENVENIDA20</b> y llévate 20% de descuento en tu primera orden. Pa&apos; que arranques con flow.</p>
+            <p className="mt-3 text-white/90 text-lg">Activa tu cupón <b className="text-rd-yellow">BIENVENIDA20</b> y llévate 20% de descuento en tu primera orden. Para que empieces a decorar tu espacio.</p>
           </div>
           <div className="flex md:justify-end">
             <Link href="/registro">

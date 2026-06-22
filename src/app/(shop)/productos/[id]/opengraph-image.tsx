@@ -1,14 +1,14 @@
 import { ImageResponse } from 'next/og'
 import { getProductByIdOrSlug } from '@/lib/queries/products'
 
-export const alt = 'TIENDA RD'
+export const alt = 'Cora Mely'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
-const RD_CHARCOAL = '#1a1a1a'
-const RD_YELLOW = '#f9c80e'
-const RD_RED = '#d62828'
-const RD_BONE = '#f7f3ec'
+const RD_CHARCOAL = '#2e2a26'
+const RD_YELLOW = '#9caf88'
+const RD_RED = '#b5563a'
+const RD_BONE = '#f4eee3'
 
 function formatPrice(value: number) {
   return `RD$${new Intl.NumberFormat('en-US').format(Math.round(value))}`
@@ -35,7 +35,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
             letterSpacing: '-0.04em',
           }}
         >
-          TIENDA RD
+          Cora Mely
         </div>
       ),
       { ...size },
@@ -73,7 +73,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
             display: 'flex',
           }}
         >
-          TIENDA RD
+          Cora Mely
         </div>
 
         <div

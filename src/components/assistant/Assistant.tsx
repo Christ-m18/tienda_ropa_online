@@ -11,7 +11,7 @@ type Message = { role: 'user' | 'assistant'; content: string }
 const INITIAL: Message[] = [
   {
     role: 'assistant',
-    content: '¡Qué lo qué! Soy El Broth, tu asistente de TIENDA RD. Pregúntame sobre productos, envíos o pagos. 🇩🇴',
+    content: '¡Hola! Soy Mely, tu asistente de Cora Mely. Pregúntame sobre piezas, materiales, envíos o pagos. 🇩🇴',
   },
 ]
 
@@ -59,7 +59,7 @@ export default function Assistant() {
       {open && (
         <div
           role="dialog"
-          aria-label="Chat con El Broth"
+          aria-label="Chat con Mely"
           className="fixed bottom-34 md:bottom-24 right-4 md:right-6 w-[min(380px,calc(100vw-2rem))] h-[520px] max-h-[calc(100vh-10rem)] bg-white rounded-3xl shadow-2xl border border-zinc-200 flex flex-col z-50 overflow-hidden"
         >
           <div className="bg-rd-charcoal text-white p-4 flex items-center gap-3">
@@ -67,8 +67,8 @@ export default function Assistant() {
               <Sparkles className="h-5 w-5" />
             </div>
             <div>
-              <p className="font-display text-lg tracking-wider">EL BROTH</p>
-              <p className="text-xs text-zinc-400">Tu asistente urbano · powered by Gemini</p>
+              <p className="font-display text-lg tracking-wider">MELY</p>
+              <p className="text-xs text-zinc-400">Asistente de Cora Mely · powered by Gemini</p>
             </div>
           </div>
 

@@ -59,18 +59,18 @@ export default function Navbar({ profile }: { profile: Profile | null }) {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
             <span className="font-display text-3xl md:text-4xl tracking-wider text-rd-charcoal group-hover:text-rd-red transition-colors">
-              TIENDA<span className="text-rd-red">RD</span>
+              Cora<span className="text-rd-red">Mely</span>
             </span>
-            <span className="hidden sm:inline text-xs px-2 py-0.5 rounded-full bg-rd-yellow text-rd-charcoal font-bold tracking-widest">URBANO</span>
+            <span className="hidden sm:inline text-xs px-2 py-0.5 rounded-full bg-rd-yellow text-rd-charcoal font-bold tracking-widest">ARTESANAL</span>
           </Link>
 
           {/* Desktop nav */}
           <nav className="hidden lg:flex items-center gap-7 text-sm font-bold uppercase tracking-wider">
             <Link href="/productos" className="hover:text-rd-red transition-colors">Productos</Link>
-            <Link href="/productos?sort=best_selling" className="hover:text-rd-red transition-colors">Top ventas</Link>
+            <Link href="/productos?sort=best_selling" className="hover:text-rd-red transition-colors">Destacadas</Link>
             <Link href="/productos?onSale=1" className="hover:text-rd-red transition-colors">Ofertas</Link>
-            <Link href="/categorias/hombre" className="hover:text-rd-red transition-colors">Hombre</Link>
-            <Link href="/categorias/mujer" className="hover:text-rd-red transition-colors">Mujer</Link>
+            <Link href="/categorias/macrame" className="hover:text-rd-red transition-colors">Macramé</Link>
+            <Link href="/categorias/esculturas-yeso" className="hover:text-rd-red transition-colors">Esculturas</Link>
           </nav>
 
           {/* Search */}
@@ -80,7 +80,7 @@ export default function Navbar({ profile }: { profile: Profile | null }) {
               type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Busca lo que tá fuego…   /   pa enfocar"
+              placeholder="Busca tu próxima pieza…   /   para enfocar"
               className="w-full pl-10 pr-10 bg-zinc-100/70 border-zinc-200 focus-visible:ring-rd-red focus-visible:bg-white"
             />
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
@@ -174,11 +174,13 @@ export default function Navbar({ profile }: { profile: Profile | null }) {
                 </SheetHeader>
                 <nav className="flex flex-col space-y-3 mt-4 px-4 font-display text-2xl">
                   <Link href="/productos">Productos</Link>
-                  <Link href="/productos?sort=best_selling">Top ventas</Link>
+                  <Link href="/productos?sort=best_selling">Destacadas</Link>
                   <Link href="/productos?onSale=1">Ofertas</Link>
-                  <Link href="/categorias/hombre">Hombre</Link>
-                  <Link href="/categorias/mujer">Mujer</Link>
-                  <Link href="/categorias/accesorios">Accesorios</Link>
+                  <Link href="/categorias/macrame">Macramé</Link>
+                  <Link href="/categorias/cuadros-texturizados">Cuadros texturizados</Link>
+                  <Link href="/categorias/esculturas-yeso">Esculturas en yeso</Link>
+                  <Link href="/categorias/decoracion-mesa">Decoración de mesa</Link>
+                  <Link href="/categorias/piezas-pared">Piezas de pared</Link>
                 </nav>
               </SheetContent>
             </Sheet>

@@ -1,6 +1,6 @@
-# Tienda Ropa Online - Guía de Inicio
+# Cora Mely - Guía de Inicio (Supabase)
 
-Este proyecto es una e-commerce de alto rendimiento construida con **Next.js 15**, **Supabase** y **Gemini AI**.
+Este proyecto es una e-commerce de decoración artesanal de alto rendimiento construida con **Next.js 15**, **Supabase** y **Gemini AI**.
 
 ## 🚀 Configuración Inicial
 
@@ -47,4 +47,4 @@ docker-compose up --build
 - [x] Navbar y Footer responsive.
 - [x] Landing Page optimizada para conversión.
 - [x] Componentes base de shadcn/ui.
-- [x] Estructura de base de datos lista para Supabase.
+- [x] Estructura de base de d

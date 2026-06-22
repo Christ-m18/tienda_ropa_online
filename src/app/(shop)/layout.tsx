@@ -16,8 +16,8 @@ export default async function ShopLayout({ children }: { children: React.ReactNo
                 <div key={i} className="flex gap-10 whitespace-nowrap">
                   <span>🚚 Envío gratis en compras +RD$3,000</span>
                   <span>💸 Pago contra entrega disponible</span>
-                  <span>🔥 Cupón <b className="text-rd-yellow">BIENVENIDA20</b> en tu primera compra</span>
-                  <span>🇩🇴 Hecho con flow dominicano</span>
+                  <span>🌿 Cupón <b className="text-rd-yellow">BIENVENIDA20</b> en tu primera compra</span>
+                  <span>🇩🇴 Hecho a mano en República Dominicana</span>
                 </div>
               ))}
             </div>

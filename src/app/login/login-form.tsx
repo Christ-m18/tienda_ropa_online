@@ -56,9 +56,9 @@ export default function LoginForm({ redirectTo }: { redirectTo: string }) {
           disabled={pending}
           className="w-full h-12 text-base font-display tracking-wide bg-rd-red hover:bg-rd-red/90 text-white"
         >
-          {pending ? 'Entrando…' : 'Entrar al flow'}
+          {pending ? 'Entrando…' : 'Iniciar sesión'}
         </Button>
       </form>
     </div>
   )
-}
+}

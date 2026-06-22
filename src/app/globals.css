@@ -43,16 +43,21 @@
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
 
-  /* Paleta urbana dominicana */
-  --color-rd-red: #d62828;
-  --color-rd-red-dark: #9d1c1c;
-  --color-rd-blue: #002d62;
-  --color-rd-blue-dark: #001a3c;
-  --color-rd-yellow: #f9c80e;
-  --color-rd-yellow-dark: #d8a800;
-  --color-rd-bone: #f7f3ec;
-  --color-rd-charcoal: #1a1a1a;
-  --color-rd-asphalt: #0a0a0a;
+  /*
+   * Paleta artesanal Cora Mely.
+   * Los nombres de los tokens (rd-*) se conservan para minimizar el
+   * diff en los componentes, pero los valores ya no son la paleta
+   * urbana original: ahora son tonos de arcilla, lino y salvia.
+   */
+  --color-rd-red: #b5563a; /* arcilla / terracota — CTAs principales */
+  --color-rd-red-dark: #8a3f29; /* terracota oscuro — hover de CTAs */
+  --color-rd-blue: #5b6b42; /* oliva profundo — acento secundario (admin) */
+  --color-rd-blue-dark: #414c2f; /* oliva oscuro */
+  --color-rd-yellow: #9caf88; /* verde salvia — acentos y destacados */
+  --color-rd-yellow-dark: #7e9468; /* salvia oscuro — hover */
+  --color-rd-bone: #f4eee3; /* lino / marfil — fondos cálidos */
+  --color-rd-charcoal: #2e2a26; /* carbón suave — texto y superficies oscuras */
+  --color-rd-asphalt: #15120e; /* carbón profundo */
 
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
@@ -64,60 +69,60 @@
 }
 
 :root {
-  --background: oklch(0.985 0.005 80);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.51 0.21 27);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.96 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.96 0 0);
-  --muted-foreground: oklch(0.45 0 0);
-  --accent: oklch(0.86 0.18 90);
-  --accent-foreground: oklch(0.18 0 0);
+  --background: oklch(0.974 0.011 84.6);
+  --foreground: oklch(0.256 0.007 48.4);
+  --card: oklch(0.99 0.006 84);
+  --card-foreground: oklch(0.256 0.007 48.4);
+  --popover: oklch(0.99 0.006 84);
+  --popover-foreground: oklch(0.256 0.007 48.4);
+  --primary: oklch(0.537 0.124 41.1);
+  --primary-foreground: oklch(0.98 0.01 84);
+  --secondary: oklch(0.93 0.012 80);
+  --secondary-foreground: oklch(0.256 0.007 48.4);
+  --muted: oklch(0.93 0.012 80);
+  --muted-foreground: oklch(0.502 0.019 70.3);
+  --accent: oklch(0.755 0.065 128.6);
+  --accent-foreground: oklch(0.271 0.025 128.1);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.9 0 0);
-  --input: oklch(0.92 0 0);
-  --ring: oklch(0.55 0.2 27);
-  --chart-1: oklch(0.51 0.21 27);
-  --chart-2: oklch(0.86 0.18 90);
-  --chart-3: oklch(0.32 0.1 250);
-  --chart-4: oklch(0.6 0.15 30);
-  --chart-5: oklch(0.4 0.1 100);
+  --border: oklch(0.896 0.023 84.6);
+  --input: oklch(0.87 0.025 84);
+  --ring: oklch(0.537 0.124 41.1);
+  --chart-1: oklch(0.537 0.124 41.1);
+  --chart-2: oklch(0.755 0.065 128.6);
+  --chart-3: oklch(0.503 0.064 126.0);
+  --chart-4: oklch(0.656 0.113 47.0);
+  --chart-5: oklch(0.638 0.068 129.7);
   --radius: 0.625rem;
 
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.51 0.21 27);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.96 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.92 0 0);
-  --sidebar-ring: oklch(0.55 0.2 27);
+  --sidebar: oklch(0.974 0.011 84.6);
+  --sidebar-foreground: oklch(0.256 0.007 48.4);
+  --sidebar-primary: oklch(0.537 0.124 41.1);
+  --sidebar-primary-foreground: oklch(0.98 0.01 84);
+  --sidebar-accent: oklch(0.93 0.012 80);
+  --sidebar-accent-foreground: oklch(0.256 0.007 48.4);
+  --sidebar-border: oklch(0.87 0.025 84);
+  --sidebar-ring: oklch(0.537 0.124 41.1);
 }
 
 .dark {
-  --background: oklch(0.115 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.18 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.18 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.6 0.22 27);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.25 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.22 0 0);
-  --muted-foreground: oklch(0.65 0 0);
-  --accent: oklch(0.86 0.18 90);
-  --accent-foreground: oklch(0.18 0 0);
+  --background: oklch(0.184 0.009 75.0);
+  --foreground: oklch(0.95 0.012 84);
+  --card: oklch(0.24 0.012 70);
+  --card-foreground: oklch(0.95 0.012 84);
+  --popover: oklch(0.24 0.012 70);
+  --popover-foreground: oklch(0.95 0.012 84);
+  --primary: oklch(0.656 0.113 47.0);
+  --primary-foreground: oklch(0.98 0.01 84);
+  --secondary: oklch(0.3 0.014 70);
+  --secondary-foreground: oklch(0.95 0.012 84);
+  --muted: oklch(0.27 0.012 70);
+  --muted-foreground: oklch(0.68 0.02 75);
+  --accent: oklch(0.62 0.06 128);
+  --accent-foreground: oklch(0.95 0.02 84);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 12%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.6 0.22 27);
+  --ring: oklch(0.656 0.113 47.0);
 }
 
 @layer base {
@@ -127,8 +132,8 @@
   body {
     @apply bg-background text-foreground;
     background-image:
-      radial-gradient(circle at 10% 0%, rgba(214, 40, 40, 0.05), transparent 40%),
-      radial-gradient(circle at 90% 10%, rgba(249, 200, 14, 0.06), transparent 40%);
+      radial-gradient(circle at 10% 0%, rgba(181, 86, 58, 0.06), transparent 40%),
+      radial-gradient(circle at 90% 10%, rgba(156, 175, 136, 0.08), transparent 40%);
     background-attachment: fixed;
   }
   html {
@@ -150,32 +155,16 @@
 }
 
 @layer components {
-  .urban-stripes {
+  /* Trama tejida sutil, evoca macramé y fibras naturales */
+  .woven-texture {
     background-image: repeating-linear-gradient(
       135deg,
       transparent 0,
       transparent 14px,
-      rgba(0, 0, 0, 0.04) 14px,
-      rgba(0, 0, 0, 0.04) 16px
+      rgba(46, 42, 38, 0.04) 14px,
+      rgba(46, 42, 38, 0.04) 16px
     );
   }
   .marquee {
     display: flex;
-    gap: 2.5rem;
-    width: max-content;
-    animation: marquee 30s linear infinite;
-  }
-  @keyframes marquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
-  .grain::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.85' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.4 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
-    opacity: 0.35;
-    mix-blend-mode: overlay;
-    pointer-events: none;
-  }
-}
+    gap:

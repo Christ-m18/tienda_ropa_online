@@ -25,6 +25,9 @@ const productSchema = z.object({
   stock: z.coerce.number().int().nonnegative(),
   images: z.array(z.string().url()).min(1),
   is_featured: z.coerce.boolean().optional(),
+  materials: z.string().nullable().optional(),
+  dimensions: z.string().nullable().optional(),
+  care_instructions: z.string().nullable().optional(),
 })
 
 export async function upsertProduct(formData: FormData) {
@@ -42,6 +45,9 @@ export async function upsertProduct(formData: FormData) {
     stock: formData.get('stock'),
     images: (formData.get('images') as string ?? '').split('\n').map((s) => s.trim()).filter(Boolean),
     is_featured: formData.get('is_featured') === 'on',
+    materials: formData.get('materials') || null,
+    dimensions: formData.get('dimensions') || null,
+    care_instructions: formData.get('care_instructions') || null,
   })
   if (!parsed.success) return { ok: false as const, message: parsed.error.issues[0]?.message ?? 'Datos inválidos' }
 

@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import InfoPage from '@/components/layout/InfoPage'
 
-export const metadata = { title: 'Centro de ayuda | TIENDA RD' }
+export const metadata = { title: 'Centro de ayuda | Cora Mely' }
 
 const FAQS = [
   {
@@ -17,8 +17,12 @@ const FAQS = [
     a: 'Escribe el código en la sección "Cupón" del checkout y pulsa Aplicar. El descuento se reflejará antes de confirmar.',
   },
   {
-    q: '¿Puedo cambiar o devolver una prenda?',
-    a: 'Tienes 30 días desde la entrega. La prenda debe estar sin usar y con su etiqueta. Escríbenos por WhatsApp para coordinar.',
+    q: '¿Puedo cambiar o devolver una pieza?',
+    a: 'Tienes 30 días desde la entrega. La pieza debe estar sin usar y, de ser posible, en su empaque original. Escríbenos por WhatsApp para coordinar.',
+  },
+  {
+    q: '¿Las piezas vienen protegidas en el envío?',
+    a: 'Sí. Cada pieza es hecha a mano y se embala individualmente con materiales protectores antes de salir de nuestro taller, especialmente las piezas en yeso y cerámica.',
   },
   {
     q: '¿Cómo rastreo mi pedido?',
@@ -38,9 +42,9 @@ export default function AyudaPage() {
           <p className="text-xs uppercase tracking-[0.3em] text-zinc-400">WhatsApp</p>
           <p className="font-display text-2xl mt-1">+1 (809) 256-6896</p>
         </a>
-        <a href="mailto:hola@tiendard.do" className="block bg-rd-bone rounded-2xl p-5 hover:bg-rd-yellow transition">
+        <a href="mailto:hola@coramely.do" className="block bg-rd-bone rounded-2xl p-5 hover:bg-rd-yellow transition">
           <p className="text-xs uppercase tracking-[0.3em] text-zinc-500">Correo</p>
-          <p className="font-display text-2xl mt-1">hola@tiendard.do</p>
+          <p className="font-display text-2xl mt-1">hola@coramely.do</p>
         </a>
       </div>
 

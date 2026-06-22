@@ -1,6 +1,6 @@
-# TIENDA RD · Moda Urbana Dominicana 🇩🇴
+# Cora Mely · Decoración artesanal para el hogar 🇩🇴
 
-E-commerce completo con flow caribeño: streetwear, accesorios y ropa urbana, optimizado para el mercado dominicano.
+E-commerce completo de piezas decorativas hechas a mano en República Dominicana: macramé, cuadros texturizados, esculturas en yeso y piezas de fibras naturales, optimizado para el mercado dominicano.
 
 > Construido con **Next.js 16**, **Supabase** (PostgreSQL + Auth + RLS), **Tailwind v4**, **shadcn/ui**, **Zustand**, **React Query**, **Server Actions** y **Gemini AI**.
 
@@ -12,6 +12,8 @@ E-commerce completo con flow caribeño: streetwear, accesorios y ropa urbana, op
 1. Crea un proyecto en [supabase.com](https://supabase.com).
 2. Abre **SQL Editor** y pega el contenido de [`supabase/schema.sql`](./supabase/schema.sql). Ejecuta.
 3. En **Settings → API** copia la `URL` y la `anon key`.
+
+> Si ya tenías el esquema anterior corriendo, ejecuta también [`supabase/migration-product-details.sql`](./supabase/migration-product-details.sql) para migrar al catálogo de decoración artesanal sin perder pedidos ni usuarios.
 
 ### 2. Variables de entorno
 Copia `.env.example` a `.env.local` y completa:
@@ -25,7 +27,7 @@ cp .env.example .env.local
 | `NEXT_PUBLIC_SUPABASE_URL` | ✅ | URL de tu proyecto Supabase |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ✅ | Auth + lectura pública |
 | `SUPABASE_SERVICE_ROLE_KEY` | opcional | tareas server-side privilegiadas |
-| `GEMINI_API_KEY` | ✅ (asistente IA) | Activar el chatbot urbano |
+| `GEMINI_API_KEY` | ✅ (asistente IA) | Activar a Mely, la asistente virtual |
 | `STRIPE_SECRET_KEY` / `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | opcional | Pagos con tarjeta |
 | `PAYPAL_CLIENT_ID` | opcional | Pagos con PayPal |
 
@@ -63,14 +65,14 @@ docker compose --env-file .env.local up --build
 ## ✨ Funcionalidades
 
 ### Tienda
-- Landing urbana dominicana (hero, categorías, destacados, top ventas, ofertas, CTA)
+- Landing artesanal (hero, categorías, piezas destacadas, favoritas, ofertas, CTA)
 - Catálogo `/productos` con filtros (categoría, precio, stock, ofertas), ordenamiento y búsqueda
-- Detalle de producto con galería, reseñas, productos relacionados, cantidad y "comprar ahora"
+- Detalle de producto con galería, materiales, dimensiones, cuidado, reseñas, piezas relacionadas, cantidad y "comprar ahora"
 - Carrito persistente (Zustand + localStorage) con sheet lateral
 - Wishlist por usuario (server-side con RLS)
 - Checkout multi-paso (4 pasos): contacto, dirección, método de pago, confirmación
-- 4 métodos de pago: Stripe, PayPal, **contra entrega** (recomendado en RD), transferencia
-- Cupones (`BIENVENIDA20`, `ENVIORD`, `FLOW10`) con validación server-side
+- 4 métodos de pago: Stripe, PayPal, **contra entrega** (recomendado en RD), transferencia con revisión de comprobante
+- Cupones (`BIENVENIDA20`, `ENVIORD`, `HOGAR10`) con validación server-side
 - Reseñas con rating y recálculo automático del promedio del producto
 
 ### Cuenta
@@ -81,17 +83,18 @@ docker compose --env-file .env.local up --build
 
 ### Admin
 - Dashboard con KPIs (ingresos, órdenes, productos, usuarios, alertas de stock)
-- CRUD de productos
+- CRUD de productos, incluyendo materiales, dimensiones y cuidado de cada pieza
 - Gestión de órdenes y cambio de estado con tracking
 - Visualización de cupones
 - Audit log de acciones críticas
 
 ### IA (Gemini)
-- Asistente flotante "El Cuero" que habla en dominicano
-- Recomienda los productos más vendidos en tiempo real
-- Soporta dudas sobre pedidos, pagos y envíos
+- Asistente flotante "Mely", con tono cálido y servicial
+- Recomienda las piezas más vendidas en tiempo real
+- Ayuda con dudas sobre materiales, cuidado, pedidos, pagos y envíos
 
 ### Logística RD
+- Embalaje cuidadoso para piezas frágiles (yeso, cerámica) antes de cada envío
 - Flujo de estados: `pending → processing → shipped → delivered`
 - Tracking number visible en panel admin y en perfil
 - Envío gratis en compras mayores a RD$3,000
@@ -121,10 +124,10 @@ src/
 │   └── globals.css
 ├── components/
 │   ├── layout/         # Navbar, Footer
-│   ├── products/       # Card, Grid, filtros, detalle, reviews
+│   ├── products/       # Card, Grid, filtros, detalle, reviews, guía de cuidado
 │   ├── checkout/       # CheckoutFlow
 │   ├── cart/           # CartSheet
-│   ├── assistant/      # Chat IA
+│   ├── assistant/      # Chat IA (Mely)
 │   ├── common/         # Providers
 │   └── ui/             # shadcn/ui
 ├── lib/
@@ -147,8 +150,8 @@ src/
 | Tabla | Propósito |
 |---|---|
 | `profiles` | Perfil del usuario, flag `is_admin` |
-| `categories` | Hombre, mujer, accesorios |
-| `products` | Catálogo con `slug`, `images[]`, `sales_count`, `rating` |
+| `categories` | Macramé, cuadros texturizados, esculturas en yeso, decoración de mesa, piezas de pared |
+| `products` | Catálogo con `slug`, `images[]`, `materials`, `dimensions`, `care_instructions`, `sales_count`, `rating` |
 | `reviews` | 1 reseña por usuario por producto, rating 1-5 |
 | `addresses` | Múltiples direcciones por usuario |
 | `coupons` | `percentage` o `fixed`, con vigencia y máximo de usos |
@@ -169,7 +172,7 @@ Funciones SQL: `handle_new_user`, `decrement_stock`, `increment_coupon_use`, `pr
 |---|---|---|
 | `BIENVENIDA20` | -20% | RD$1,500 |
 | `ENVIORD` | -RD$250 (envío) | RD$2,500 |
-| `FLOW10` | -10% | sin mínimo |
+| `HOGAR10` | -10% | sin mínimo |
 
 ---
 
@@ -184,20 +187,6 @@ Funciones SQL: `handle_new_user`, `decrement_stock`, `increment_coupon_use`, `pr
 
 ## 🎨 Estilo
 
-Paleta urbana dominicana:
-- **`rd-red`** (#d62828) · acento principal, CTAs
-- **`rd-yellow`** (#f9c80e) · highlights, badges destacados
-- **`rd-charcoal`** (#1a1a1a) · texto, fondos oscuros
-- **`rd-bone`** (#f7f3ec) · fondos cálidos
-- Tipografía: **Bebas Neue** para titulares, **Inter** para texto corrido
-
----
-
-## SEO
-
-`sitemap.xml`, `robots.txt` y la imagen Open Graph de cada producto se generan automaticamente desde rutas en `src/app/`. El manifest PWA tambien se sirve desde `manifest.ts`. Configura `NEXT_PUBLIC_SITE_URL` para que las URLs canonicas apunten a tu dominio.
-
----
-
-Hecho con 🇩🇴 desde La Vega.
-# Tienda_Ropa_Online
+Paleta artesanal (arcilla, lino y salvia):
+- **`rd-red`** (#b5563a) · terracota/arcilla, acento principal y CTAs
+- **`r

@@ -8,9 +8,9 @@ export default function Footer() {
       <div className="border-b border-white/10">
         <div className="container mx-auto px-4 py-8 grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
-            { icon: Truck, title: 'ENVÍO RÁPIDO', desc: '24-72h en RD' },
+            { icon: Truck, title: 'ENVÍO CUIDADOSO', desc: '24-72h en RD, embalaje protegido' },
             { icon: CreditCard, title: 'PAGO FLEX', desc: 'Stripe, PayPal, contra entrega' },
-            { icon: RefreshCw, title: 'CAMBIOS', desc: "30 días pa' devolver" },
+            { icon: RefreshCw, title: 'CAMBIOS', desc: '30 días para devolver' },
             { icon: ShieldCheck, title: 'SEGURO', desc: 'Encriptación SSL' },
           ].map((item) => (
             <div key={item.title} className="flex items-start gap-3">
@@ -29,10 +29,10 @@ export default function Footer() {
       <div className="container mx-auto px-4 py-12 grid grid-cols-2 md:grid-cols-4 gap-8">
         <div className="col-span-2 md:col-span-1 space-y-3">
           <h3 className="font-display text-3xl tracking-wider text-white">
-            TIENDA<span className="text-rd-red">RD</span>
+            Cora<span className="text-rd-red">Mely</span>
           </h3>
           <p className="text-sm text-zinc-400">
-            El flow del Caribe en tu closet. Streetwear con sabor dominicano, hecho pa&apos; la calle.
+            Decoración artesanal hecha a mano en República Dominicana. Macramé, texturas y yeso para tu hogar.
           </p>
           <div className="flex gap-3 pt-2">
             <Link
@@ -87,23 +87,28 @@ export default function Footer() {
           <h4 className="font-display tracking-wider text-white text-sm mb-4">CATEGORÍAS</h4>
           <ul className="space-y-2 text-sm text-zinc-400">
             <li>
-              <Link href="/categorias/hombre" className="hover:text-rd-yellow">
-                Hombre
+              <Link href="/categorias/macrame" className="hover:text-rd-yellow">
+                Macramé
               </Link>
             </li>
             <li>
-              <Link href="/categorias/mujer" className="hover:text-rd-yellow">
-                Mujer
+              <Link href="/categorias/cuadros-texturizados" className="hover:text-rd-yellow">
+                Cuadros texturizados
               </Link>
             </li>
             <li>
-              <Link href="/categorias/accesorios" className="hover:text-rd-yellow">
-                Accesorios
+              <Link href="/categorias/esculturas-yeso" className="hover:text-rd-yellow">
+                Esculturas en yeso
               </Link>
             </li>
             <li>
-              <Link href="/productos?onSale=1" className="hover:text-rd-yellow">
-                Ofertas
+              <Link href="/categorias/decoracion-mesa" className="hover:text-rd-yellow">
+                Decoración de mesa
+              </Link>
+            </li>
+            <li>
+              <Link href="/categorias/piezas-pared" className="hover:text-rd-yellow">
+                Piezas de pared
               </Link>
             </li>
           </ul>
@@ -117,8 +122,8 @@ export default function Footer() {
               </a>
             </li>
             <li>
-              <a href="mailto:[EMAIL_ADDRESS]" className="hover:text-rd-yellow">
-                [EMAIL_ADDRESS]
+              <a href="mailto:hola@coramely.do" className="hover:text-rd-yellow">
+                hola@coramely.do
               </a>
             </li>
             <li>Av. Calle Libertad, La Vega</li>
@@ -128,7 +133,7 @@ export default function Footer() {
 
       <div className="border-t border-white/10">
         <div className="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-3 items-center justify-between text-xs text-zinc-500">
-          <p>© {new Date().getFullYear()} TIENDA RD · Hecho con 🇩🇴 desde La Vega</p>
+          <p>© {new Date().getFullYear()} Cora Mely · Hecho con 🇩🇴 desde La Vega</p>
           <div className="flex gap-4">
             <Link href="/terminos" className="hover:text-zinc-300">
               Términos

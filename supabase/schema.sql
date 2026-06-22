@@ -1,5 +1,5 @@
 -- =====================================================================
--- TIENDA RD · Esquema completo (idempotente)
+-- Cora Mely · Esquema completo (idempotente)
 -- Ejecuta este archivo en el SQL editor de Supabase para crear todo.
 -- =====================================================================
 
@@ -32,20 +32,27 @@ create table if not exists public.categories (
 );
 
 create table if not exists public.products (
-  id              uuid primary key default uuid_generate_v4(),
-  category_id     uuid references public.categories(id) on delete set null,
-  slug            text,
-  name            text not null,
-  description     text not null default '',
-  price           numeric(10,2) not null check (price >= 0),
-  discount_price  numeric(10,2) check (discount_price is null or discount_price >= 0),
-  stock           integer not null default 0 check (stock >= 0),
-  images          text[] not null default '{}',
-  is_featured     boolean not null default false,
-  rating          numeric(2,1) not null default 0 check (rating >= 0 and rating <= 5),
-  sales_count     integer not null default 0,
-  created_at      timestamptz not null default now()
+  id                 uuid primary key default uuid_generate_v4(),
+  category_id        uuid references public.categories(id) on delete set null,
+  slug               text,
+  name               text not null,
+  description        text not null default '',
+  price              numeric(10,2) not null check (price >= 0),
+  discount_price     numeric(10,2) check (discount_price is null or discount_price >= 0),
+  stock              integer not null default 0 check (stock >= 0),
+  images             text[] not null default '{}',
+  is_featured        boolean not null default false,
+  rating             numeric(2,1) not null default 0 check (rating >= 0 and rating <= 5),
+  sales_count        integer not null default 0,
+  materials          text,
+  dimensions         text,
+  care_instructions  text,
+  created_at         timestamptz not null default now()
 );
+-- Idempotente para bases ya existentes (ver tambien supabase/migration-product-details.sql)
+alter table public.products add column if not exists materials text;
+alter table public.products add column if not exists dimensions text;
+alter table public.products add column if not exists care_instructions text;
 create unique index if not exists products_slug_idx        on public.products(slug) where slug is not null;
 create index        if not exists products_category_id_idx on public.products(category_id);
 create index        if not exists products_is_featured_idx on public.products(is_featured) where is_featured;
@@ -354,11 +361,22 @@ begin
 end;
 $$;
 
+-- LIMPIEZA DE SEED ANTERIOR (ropa urbana) -----------------------------
+-- Quita el catálogo demo de la etapa "Cora Mely streetwear" antes del
+-- pivote a decoración artesanal. Seguro de re-ejecutar.
+delete from public.products where slug in (
+  'camiseta-rd-flow', 'jogger-streetwear-negro', 'sudadera-capucha-roja',
+  'top-corto-perreo', 'leggings-deportivos', 'gorra-snapback-rd'
+);
+delete from public.categories where slug in ('hombre', 'mujer', 'accesorios');
+
 -- SEED CATEGORÍAS ----------------------------------------------------
 insert into public.categories (name, slug, image_url) values
-  ('Hombre',     'hombre',     'https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?q=80&w=2071'),
-  ('Mujer',      'mujer',      'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070'),
-  ('Accesorios', 'accesorios', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=2099')
+  ('Macramé',              'macrame',              'https://images.unsplash.com/photo-1633594308237-3dcfa56b4e69?q=80&w=2071'),
+  ('Cuadros texturizados', 'cuadros-texturizados', 'https://images.unsplash.com/photo-1608158680747-943c02770c5e?q=80&w=2070'),
+  ('Esculturas en yeso',   'esculturas-yeso',      'https://images.unsplash.com/photo-1447758902204-48010b87c24d?q=80&w=2070'),
+  ('Decoración de mesa',   'decoracion-mesa',      'https://images.unsplash.com/photo-1612196808214-b8e1d6145a8c?q=80&w=2070'),
+  ('Piezas de pared',      'piezas-pared',         'https://images.unsplash.com/photo-1632761644913-0da6105863cb?q=80&w=2070')
 on conflict (slug) do nothing;
 
 -- SEED CUPONES --------------------------------------------------------
@@ -366,21 +384,71 @@ insert into public.coupons (code, description, type, discount_value, min_purchas
 values
   ('BIENVENIDA20', '20% de descuento en tu primera compra', 'percentage', 20, 1500, 500, now() + interval '60 days'),
   ('ENVIORD',      'Envío gratis en compras mayores a RD$2500', 'fixed', 250, 2500, null, now() + interval '90 days'),
-  ('FLOW10',       '10% extra al carrito', 'percentage', 10, 0, null, now() + interval '30 days')
+  ('HOGAR10',      '10% extra al decorar tu hogar', 'percentage', 10, 0, null, now() + interval '30 days')
 on conflict (code) do nothing;
 
+update public.coupons set description = '10% extra al decorar tu hogar' where code = 'HOGAR10';
+
 -- SEED PRODUCTOS ------------------------------------------------------
-with cat as (select id, slug from public.categories where slug in ('hombre','mujer','accesorios'))
-insert into public.products (category_id, slug, name, description, price, discount_price, stock, images, is_featured, rating, sales_count)
-select (select id from cat where slug = p.cat_slug), p.slug, p.name, p.description, p.price, p.discount_price, p.stock, p.images, p.is_featured, p.rating, p.sales_count
+with cat as (select id, slug from public.categories where slug in ('macrame','cuadros-texturizados','esculturas-yeso','decoracion-mesa','piezas-pared'))
+insert into public.products (category_id, slug, name, description, price, discount_price, stock, images, is_featured, rating, sales_count, materials, dimensions, care_instructions)
+select (select id from cat where slug = p.cat_slug), p.slug, p.name, p.description, p.price, p.discount_price, p.stock, p.images, p.is_featured, p.rating, p.sales_count, p.materials, p.dimensions, p.care_instructions
 from (values
-  ('hombre',     'camiseta-rd-flow',         'Camiseta Oversized "RD Flow"',         'Camiseta oversized con bordado dominicano. 100% algodón premium.', 1450, 990,  60, array['https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1200'], true,  4.8, 230),
-  ('hombre',     'jogger-streetwear-negro',  'Jogger Streetwear Negro',              'Jogger relajado con bolsillos cargo y elástico ajustable.',         2200, 1690, 45, array['https://images.unsplash.com/photo-1593030103066-0093718efeb9?q=80&w=1200'], true,  4.6, 180),
-  ('hombre',     'sudadera-capucha-roja',    'Hoodie "Capital del Caribe"',          'Sudadera con capucha en algodón perchado.',                          2800, 2350, 30, array['https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=1200'], false, 4.7, 140),
-  ('mujer',      'top-corto-perreo',         'Top Cropped "Dembow Vibes"',           'Top cropped en jersey suave.',                                       1290, 890,  70, array['https://images.unsplash.com/photo-1583744946564-b52ac1c389c8?q=80&w=1200'], true,  4.9, 310),
-  ('mujer',      'leggings-deportivos',      'Leggings Deportivos High Waist',       'Leggings de cintura alta con compresión.',                           1450, 1190, 90, array['https://images.unsplash.com/photo-1506629082955-511b1aa562c8?q=80&w=1200'], true,  4.7, 200),
-  ('accesorios', 'gorra-snapback-rd',        'Snapback "República Dominicana"',      'Gorra plana bordada con la bandera.',                                890,  590,  120, array['https://images.unsplash.com/photo-1521369909029-2afed882baee?q=80&w=1200'], true, 4.9, 410)
-) as p(cat_slug, slug, name, description, price, discount_price, stock, images, is_featured, rating, sales_count)
+  ('macrame',              'tapiz-macrame-brisa',
+    'Tapiz de macramé "Brisa"',
+    'Tapiz tejido a mano con nudos tradicionales de macramé. Una pieza ligera y aireada que aporta calidez y textura natural a cualquier pared.',
+    2400, 1900, 14,
+    array['https://images.unsplash.com/photo-1619808799783-db68de98fbe0?q=80&w=1200'],
+    true, 4.9, 86,
+    'Algodón 100% sin teñir, varilla de madera de pino',
+    '90 x 60 cm',
+    'Sacudir el polvo con brocha seca. Evitar humedad y luz solar directa.'),
+  ('cuadros-texturizados', 'cuadro-texturizado-arena',
+    'Cuadro texturizado "Arena"',
+    'Cuadro con textura tipo estuco aplicada a mano, inspirado en las dunas y la arena del Caribe. Tonos cálidos que se integran a espacios modernos.',
+    3200, null, 9,
+    array['https://images.unsplash.com/photo-1614516960150-3edb5b923887?q=80&w=1200'],
+    true, 4.8, 52,
+    'Pasta de estuco sobre lienzo, marco de madera',
+    '70 x 100 cm',
+    'Limpiar con paño suave y seco. No frotar la textura ni usar productos líquidos.'),
+  ('esculturas-yeso',      'escultura-yeso-luna',
+    'Escultura en yeso "Luna"',
+    'Escultura de mesa tallada y pulida a mano en yeso cerámico. Forma orgánica inspirada en las fases lunares, acabado mate.',
+    1800, 1450, 11,
+    array['https://images.unsplash.com/photo-1551047163-78c1a36ad573?q=80&w=1200'],
+    true, 4.9, 64,
+    'Yeso cerámico, base de fibra natural',
+    '18 x 24 cm aprox.',
+    'Limpiar con paño seco o ligeramente húmedo. No sumergir en agua.'),
+  ('decoracion-mesa',      'centro-de-mesa-artesanal',
+    'Centro de mesa artesanal',
+    'Centro de mesa en fibras naturales trenzadas a mano, ideal para frutero o como pieza decorativa independiente.',
+    1450, null, 20,
+    array['https://images.unsplash.com/photo-1631125915597-adf46a94e436?q=80&w=1200'],
+    false, 4.6, 38,
+    'Fibras naturales (bejuco), base de madera',
+    '30 cm de diámetro x 8 cm alto',
+    'Mantener alejado de la humedad constante. Sacudir con paño seco.'),
+  ('decoracion-mesa',      'set-portavelas-yeso',
+    'Set de portavelas en yeso',
+    'Set de 3 portavelas de yeso moldeados a mano, en distintos tamaños, con acabado artesanal ligeramente texturizado.',
+    1200, 950, 16,
+    array['https://images.unsplash.com/photo-1631125915671-e632fadad927?q=80&w=1200'],
+    true, 4.7, 71,
+    'Yeso cerámico',
+    'Set de 3: 6, 9 y 12 cm de alto',
+    'Limpiar el exceso de cera con un paño seco. Evitar golpes en los bordes.'),
+  ('piezas-pared',         'pieza-mural-fibras-naturales',
+    'Pieza mural de fibras naturales',
+    'Pieza mural tejida con fibras naturales y ramas secas, pensada para dar profundidad y textura a paredes vacías.',
+    2750, 2200, 7,
+    array['https://images.unsplash.com/photo-1654636437732-897b94921f78?q=80&w=1200'],
+    false, 4.8, 29,
+    'Fibras naturales, ramas secas, hilo de algodón',
+    '80 x 50 cm',
+    'Colgar lejos de fuentes de calor directo. Sacudir suavemente para quitar el polvo.')
+) as p(cat_slug, slug, name, description, price, discount_price, stock, images, is_featured, rating, sales_count, materials, dimensions, care_instructions)
 on conflict (slug) where slug is not null do nothing;
 
 -- =====================================================================
@@ -398,50 +466,4 @@ create table if not exists public.payment_proofs (
   id               uuid primary key default uuid_generate_v4(),
   order_id         uuid not null references public.orders(id) on delete cascade,
   user_id          uuid not null references auth.users(id) on delete cascade,
-  file_path        text not null,
-  bank_name        text,
-  reference_number text,
-  amount           numeric(10,2),
-  notes            text,
-  status           public.payment_proof_status not null default 'pending',
-  reviewed_by      uuid references auth.users(id) on delete set null,
-  reviewed_at      timestamptz,
-  rejection_reason text,
-  created_at       timestamptz not null default now()
-);
-create index if not exists payment_proofs_order_id_idx on public.payment_proofs(order_id);
-create index if not exists payment_proofs_user_id_idx on public.payment_proofs(user_id);
-create index if not exists payment_proofs_status_idx  on public.payment_proofs(status);
-
-alter table public.payment_proofs enable row level security;
-
-drop policy if exists "payment_proofs_select_own" on public.payment_proofs;
-create policy "payment_proofs_select_own" on public.payment_proofs for select using (auth.uid() = user_id);
-
-drop policy if exists "payment_proofs_insert_own" on public.payment_proofs;
-create policy "payment_proofs_insert_own" on public.payment_proofs for insert with check (auth.uid() = user_id);
-
-drop policy if exists "payment_proofs_admin_all" on public.payment_proofs;
-create policy "payment_proofs_admin_all" on public.payment_proofs for all using (
-  exists (select 1 from public.profiles p where p.id = auth.uid() and p.is_admin)
-);
-
-drop policy if exists "profiles_admin_all" on public.profiles;
-create policy "profiles_admin_all" on public.profiles for all using (public.is_admin_user());
-
-drop policy if exists "notifications_insert_admin" on public.notifications;
-create policy "notifications_insert_admin" on public.notifications for insert with check (public.is_admin_user());
-
-drop policy if exists "audit_logs_insert_admin" on public.audit_logs;
-create policy "audit_logs_insert_admin" on public.audit_logs for insert with check (public.is_admin_user());
-
-drop policy if exists "notifications_insert_own" on public.notifications;
-create policy "notifications_insert_own" on public.notifications for insert with check (auth.uid() = user_id);
-
-do $$ begin alter publication supabase_realtime add table public.orders;         exception when others then null; end $$;
-do $$ begin alter publication supabase_realtime add table public.order_items;    exception when others then null; end $$;
-do $$ begin alter publication supabase_realtime add table public.profiles;       exception when others then null; end $$;
-do $$ begin alter publication supabase_realtime add table public.products;       exception when others then null; end $$;
-do $$ begin alter publication supabase_realtime add table public.payment_proofs; exception when others then null; end $$;
-do $$ begin alter publication supabase_realtime add table public.audit_logs;     exception when others then null; end $$;
-do $$ begin alter publication supabase_realtime add table public.notifications;  exception when others then null; end $$;
+  file_path        text not n

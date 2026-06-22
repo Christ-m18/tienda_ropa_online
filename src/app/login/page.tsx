@@ -14,10 +14,10 @@ export default async function LoginPage({ searchParams }: { searchParams: Search
       <div className="w-full max-w-md bg-zinc-950/80 border border-red-600/30 rounded-3xl shadow-[0_0_60px_rgba(214,40,40,0.15)] backdrop-blur-xl p-8 md:p-10">
         <div className="text-center mb-8">
           <Link href="/" className="inline-block text-3xl font-display tracking-wider text-white">
-            TIENDA<span className="text-rd-red">RD</span>
+            Cora<span className="text-rd-red">Mely</span>
           </Link>
-          <h1 className="text-2xl md:text-3xl font-display mt-6 text-white">Qué lo qué, bro</h1>
-          <p className="text-zinc-400 mt-2">Entra a tu cuenta y sigue el flow</p>
+          <h1 className="text-2xl md:text-3xl font-display mt-6 text-white">Bienvenido de vuelta</h1>
+          <p className="text-zinc-400 mt-2">Entra a tu cuenta para seguir decorando tu hogar</p>
         </div>
 
         {reason === 'auth_error' && (
@@ -42,7 +42,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Search
                   contacta con soporte para mas informacion.
                 </p>
                 <a
-                  href="mailto:soporte@tiendard.com"
+                  href="mailto:soporte@coramely.com"
                   className="inline-block mt-2 text-xs font-bold text-rd-yellow hover:underline"
                 >
                   Contactar soporte

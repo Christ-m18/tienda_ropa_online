@@ -1,11 +1,14 @@
 import InfoPage from '@/components/layout/InfoPage'
 import { SHIPPING_ZONES } from '@/lib/shipping'
 
-export const metadata = { title: 'Información de envío | TIENDA RD' }
+export const metadata = { title: 'Información de envío | Cora Mely' }
 
 export default function EnviosPage() {
   return (
     <InfoPage title="Información de envío" subtitle="Enviamos desde La Vega a todo el país. Envio gratis en compras superiores a RD$3,000.">
+      <h2>Embalaje cuidadoso</h2>
+      <p>Cada pieza es hecha a mano y se embala individualmente con materiales protectores (papel kraft, espuma y cajas reforzadas) antes de salir de nuestro taller. Las piezas en yeso y cerámica viajan con protección adicional por ser artículos frágiles.</p>
+
       <h2>Tarifas por zona (desde La Vega)</h2>
       <div className="not-prose overflow-x-auto rounded-2xl border border-zinc-200 bg-white">
         <table className="w-full text-sm">

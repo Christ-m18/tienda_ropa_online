@@ -13,7 +13,7 @@ import ProductGrid from '@/components/products/ProductGrid'
 import ProductDetailActions from '@/components/products/ProductDetailActions'
 import ReviewsSection from '@/components/products/ReviewsSection'
 import ProductGallery from '@/components/products/ProductGallery'
-import SizeGuideButton from '@/components/products/SizeGuideButton'
+import CareGuideButton from '@/components/products/CareGuideButton'
 import { formatRD, discountPercent } from '@/lib/format'
 
 type RouteParams = Promise<{ id: string }>
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
   if (!product) {
     return {
-      title: 'Producto no encontrado | TIENDA RD',
+      title: 'Producto no encontrado | Cora Mely',
       description: 'El producto que buscas no existe o ya no esta disponible.',
     }
   }
@@ -34,17 +34,17 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const image = product.images?.[0]
 
   return {
-    title: `${product.name} | TIENDA RD`,
+    title: `${product.name} | Cora Mely`,
     description: product.description,
     openGraph: {
-      title: `${product.name} | TIENDA RD`,
+      title: `${product.name} | Cora Mely`,
       description: product.description,
       type: 'website',
       images: image ? [image] : undefined,
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${product.name} | TIENDA RD`,
+      title: `${product.name} | Cora Mely`,
       description: product.description,
       images: image ? [image] : undefined,
     },
@@ -107,7 +107,7 @@ export default async function ProductDetailPage({ params }: { params: RouteParam
                   {product.stock > 0 ? `En stock (${product.stock})` : 'Agotado'}
                 </span>
                 <span className="text-zinc-300">·</span>
-                <span className="text-zinc-500">{product.sales_count}+ vendidos</span>
+                <span className="text-zinc-500">{product.sales_count}+ piezas entregadas</span>
               </div>
             </div>
 
@@ -121,9 +121,36 @@ export default async function ProductDetailPage({ params }: { params: RouteParam
               )}
             </div>
 
+            {product.stock > 0 && product.stock <= 5 && (
+              <p className="text-sm font-bold text-rd-red">Disponibilidad limitada · quedan {product.stock}</p>
+            )}
+
             <p className="text-zinc-600 leading-relaxed text-base">{product.description}</p>
 
-            <SizeGuideButton />
+            {(product.materials || product.dimensions) && (
+              <dl className="grid grid-cols-2 gap-3 text-sm">
+                {product.materials && (
+                  <div>
+                    <dt className="text-xs uppercase tracking-wider text-zinc-500">Materiales</dt>
+                    <dd className="font-medium">{product.materials}</dd>
+                  </div>
+                )}
+                {product.dimensions && (
+                  <div>
+                    <dt className="text-xs uppercase tracking-wider text-zinc-500">Dimensiones</dt>
+                    <dd className="font-medium">{product.dimensions}</dd>
+                  </div>
+                )}
+              </dl>
+            )}
+
+            {product.care_instructions && (
+              <p className="text-sm text-zinc-600 bg-zinc-50 rounded-xl p-3">
+                <span className="font-bold">Cuidado: </span>{product.care_instructions}
+              </p>
+            )}
+
+            <CareGuideButton />
 
             <ProductDetailActions
               product={{
@@ -139,7 +166,7 @@ export default async function ProductDetailPage({ params }: { params: RouteParam
             <div className="grid grid-cols-3 gap-3 pt-6 border-t border-zinc-200">
               <div className="text-center p-3 bg-zinc-50 rounded-xl">
                 <Truck className="h-5 w-5 mx-auto text-rd-red mb-1.5" />
-                <p className="text-xs font-bold uppercase tracking-wider">Envío</p>
+                <p className="text-xs font-bold uppercase tracking-wider">Envío cuidadoso</p>
                 <p className="text-[10px] text-zinc-500">Gratis +RD$3,000</p>
               </div>
               <div className="text-center p-3 bg-zinc-50 rounded-xl">
@@ -165,7 +192,7 @@ export default async function ProductDetailPage({ params }: { params: RouteParam
         {/* Related */}
         {related.length > 0 && (
           <section className="mt-20">
-            <p className="text-rd-red font-bold uppercase tracking-[0.3em] text-xs mb-2">Pa&apos; que combines</p>
+            <p className="text-rd-red font-bold uppercase tracking-[0.3em] text-xs mb-2">Combina con tu espacio</p>
             <h2 className="font-display text-3xl md:text-4xl tracking-tight mb-6">Te puede gustar también</h2>
             <ProductGrid products={related} wishlistIds={wishlistIds} />
           </section>

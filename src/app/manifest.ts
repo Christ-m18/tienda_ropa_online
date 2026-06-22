@@ -2,12 +2,12 @@ import type { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'TIENDA RD',
-    short_name: 'TIENDA RD',
-    description: 'Moda urbana dominicana. Streetwear y accesorios con envío a toda RD.',
+    name: 'Cora Mely',
+    short_name: 'Cora Mely',
+    description: 'Decoración artesanal hecha a mano: macramé, cuadros texturizados y esculturas en yeso, con envío a toda RD.',
     start_url: '/',
     display: 'standalone',
-    background_color: '#f7f3ec',
-    theme_color: '#d62828',
+    background_color: '#f4eee3',
+    theme_color: '#b5563a',
   }
 }

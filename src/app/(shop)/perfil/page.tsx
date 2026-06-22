@@ -25,7 +25,7 @@ export default async function ProfileHomePage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-display text-3xl md:text-4xl tracking-tight">Hola, {profile.full_name?.split(' ')[0] ?? 'bro'} 👋</h1>
+        <h1 className="font-display text-3xl md:text-4xl tracking-tight">Hola, {profile.full_name?.split(' ')[0] ?? 'bienvenido'} 👋</h1>
         <p className="text-zinc-500">Aquí está el resumen de tu cuenta.</p>
       </div>
 

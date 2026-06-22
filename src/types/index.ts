@@ -32,6 +32,9 @@ export interface Product {
   is_featured: boolean
   rating: number
   sales_count: number
+  materials?: string | null
+  dimensions?: string | null
+  care_instructions?: string | null
   created_at?: string
   category?: Category | null
 }

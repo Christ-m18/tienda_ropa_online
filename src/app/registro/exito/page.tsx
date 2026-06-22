@@ -17,7 +17,7 @@ export default async function RegisterSuccessPage({
       <div className="w-full max-w-md bg-zinc-950/80 border border-red-600/30 rounded-3xl shadow-[0_0_60px_rgba(214,40,40,0.15)] backdrop-blur-xl p-8 md:p-10">
         <div className="text-center mb-6">
           <Link href="/" className="inline-block text-3xl font-display tracking-wider text-white">
-            TIENDA<span className="text-rd-red">RD</span>
+            Cora<span className="text-rd-red">Mely</span>
           </Link>
         </div>
 
